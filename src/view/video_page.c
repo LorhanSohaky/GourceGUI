@@ -22,7 +22,7 @@ GtkWidget *init_video_page(GtkWidget *window){
     gtk_grid_attach(GTK_GRID(grid),widget,0,1,1,1);
 
     widget=gtk_entry_new();
-    g_signal_connect (widget, "key-release-event", G_CALLBACK (set_title),NULL);
+    g_signal_connect (widget, "key-release-event", G_CALLBACK (set_title),NULL);//TODO focus out
     gtk_grid_attach(GTK_GRID(grid),widget,1,1,1,1);
 
     widget=gtk_label_new("Screen Mode: ");

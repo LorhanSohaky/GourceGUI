@@ -34,8 +34,8 @@ controller.o:./controller/controller.c ./controller/controller.h ./view/main_men
 main_menu.o:./view/main_menu.c ./view/main_menu.h ./view/video_page.h
 	gcc -c ./view/main_menu.c -I./view/ -I./view/ `pkg-config --cflags --libs gtk+-3.0`
 
-video_page.o:./view/video_page.c ./view/video_page.h
-	gcc -c ./view/video_page.c -I./view/ `pkg-config --cflags --libs gtk+-3.0`
+video_page.o:./view/video_page.c ./view/video_page.h ./controller/controller.h ./model/gource.h
+	gcc -c ./view/video_page.c -I./view/ -I./controller/ -I./model/ `pkg-config --cflags --libs gtk+-3.0`
 
 subtitle_page.o:./view/subtitle_page.c ./view/subtitle_page.h
 	gcc -c ./view/subtitle_page.c -I./view/ `pkg-config --cflags --libs gtk+-3.0`

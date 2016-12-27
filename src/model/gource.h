@@ -3,8 +3,8 @@
 
 typedef struct{
     char *log_file;
-    char *title;
-    char *screen_mode;
+    const char *title;
+    const char *screen_mode;
     char *background_color;
     char *camera_mode;
 }_video;

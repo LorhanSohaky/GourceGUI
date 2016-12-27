@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <video_page.h>
 #include <subtitle_page.h>
+#include <other_page.h>
 
 
 typedef struct{

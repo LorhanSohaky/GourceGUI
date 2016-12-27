@@ -1,4 +1,5 @@
 #include <controller.h>
+#include <utils.h>
 
 _gource gource_settings;
 
@@ -13,6 +14,8 @@ int controller (int argc, char *argv[]){
 
     return status;
 }
+
+//CALLBACKs of video_page
 
 void set_log_file(GtkWidget *widget, gpointer data){
     gource_settings.video.log_file=gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(widget));
@@ -30,6 +33,7 @@ void set_screen_mode(GtkWidget *widget, gpointer data){
 void set_background_color(GtkWidget *widget, gpointer data){
     GdkRGBA rgba;
     gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(widget),&rgba);//TODO convert rgba to hex
+    gource_settings.video.background_color=rgba_to_hex(rgba.red,rgba.green,rgba.blue);
 }
 
 void set_camera_mode(GtkWidget *widget, gpointer data){

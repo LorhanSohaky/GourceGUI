@@ -37,7 +37,26 @@ GtkWidget *init_other_page(GtkWidget *window){
     gtk_grid_attach(GTK_GRID(grid),widget,1,3,1,1);
 
     widget=gtk_button_new_with_label("Output gource at file ");
+    g_signal_connect (widget, "clicked", G_CALLBACK (save_dialog),window);
     gtk_grid_attach(GTK_GRID(grid),widget,0,4,2,1);
 
     return grid;
+}
+
+void save_dialog(GtkWidget *widget, gpointer data){
+    GtkFileFilter *filter;
+    GtkWidget *window=(GtkWidget*)data;
+    filter =gtk_file_filter_new();
+    gtk_file_filter_add_pattern (filter, "*.MP4");
+    gtk_file_filter_add_pattern (filter, "*.mp4");
+    gtk_file_filter_set_name (filter,".mp4");
+    GtkWidget *dialog=gtk_file_chooser_dialog_new ("Choose a file to save a video of Gource",GTK_WINDOW(window),GTK_FILE_CHOOSER_ACTION_SAVE,"Save",GTK_RESPONSE_ACCEPT,"Cancel",GTK_RESPONSE_CANCEL,NULL);
+    gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog),TRUE);
+    gtk_file_chooser_add_filter (GTK_FILE_CHOOSER(dialog),filter);
+    gtk_widget_show_all(dialog);
+    gint res=gtk_dialog_run(GTK_DIALOG(dialog));
+    if(res==GTK_RESPONSE_ACCEPT){
+        printf("%s\n", gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog)));
+    }
+    gtk_widget_destroy(dialog);
 }

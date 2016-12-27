@@ -1,5 +1,5 @@
 #include <video_page.h>
-#include  <controller.h>
+#include <controller.h>
 
 GtkWidget *init_video_page(GtkWidget *window){
     GtkWidget *grid,*widget;
@@ -22,7 +22,7 @@ GtkWidget *init_video_page(GtkWidget *window){
     gtk_grid_attach(GTK_GRID(grid),widget,0,1,1,1);
 
     widget=gtk_entry_new();
-    g_signal_connect (widget, "key-release-event", G_CALLBACK (set_title),NULL);//TODO focus out
+    g_signal_connect (widget, "focus-out-event", G_CALLBACK (set_title),NULL);
     gtk_grid_attach(GTK_GRID(grid),widget,1,1,1,1);
 
     widget=gtk_label_new("Screen Mode: ");

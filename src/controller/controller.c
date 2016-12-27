@@ -18,8 +18,9 @@ void set_log_file(GtkWidget *widget, gpointer data){
     gource_settings.video.log_file=gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(widget));
 }
 
-void set_title(GtkWidget *widget, gpointer data){
+gboolean set_title(GtkWidget *widget, gpointer data){
     gource_settings.video.title=gtk_entry_get_text (GTK_ENTRY(widget));
+    return FALSE;
 }
 
 void set_screen_mode(GtkWidget *widget, gpointer data){
@@ -28,9 +29,7 @@ void set_screen_mode(GtkWidget *widget, gpointer data){
 
 void set_background_color(GtkWidget *widget, gpointer data){
     GdkRGBA rgba;
-    gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(widget),&rgba);
-    gource_settings.video.background_color=gdk_rgba_to_string(&rgba);
-    printf("%s\n",gource_settings.video.background_color);
+    gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(widget),&rgba);//TODO convert rgba to hex
 }
 
 void set_camera_mode(GtkWidget *widget, gpointer data){

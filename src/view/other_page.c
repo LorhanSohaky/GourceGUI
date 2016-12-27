@@ -1,5 +1,7 @@
 #include <other_page.h>
 
+void save_dialog(GtkWidget *widget, gpointer data);
+
 GtkWidget *init_other_page(GtkWidget *window){
     GtkWidget *grid,*widget;
     GtkListStore *liststore;

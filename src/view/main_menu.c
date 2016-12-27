@@ -1,4 +1,11 @@
 #include <main_menu.h>
+#include <video_page.h>
+#include <subtitle_page.h>
+#include <other_page.h>
+#include <gtk/gtk.h>
+
+GtkWidget *add_notebook(GtkWidget *window);
+void add_notebook_tab(GtkWidget *notebook, char *label, GtkWidget *page);
 
 void activate (GtkApplication* app,gpointer user_data){
   GtkWidget *window,*grid,*button,*notebook;

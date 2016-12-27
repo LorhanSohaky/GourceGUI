@@ -1,6 +1,7 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include <video_page.h>
+#include <subtitle_page.h>
 
 
 typedef struct{

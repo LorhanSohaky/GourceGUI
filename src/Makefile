@@ -22,8 +22,8 @@
 
 all:Main clean
 
-Main:main.o main_menu.o controller.o video_page.o
-	gcc -Wall -o prog.exe main.o main_menu.o controller.o video_page.o `pkg-config --cflags --libs gtk+-3.0`
+Main:main.o main_menu.o controller.o video_page.o subtitle_page.o
+	gcc -Wall -o prog.exe main.o main_menu.o controller.o video_page.o subtitle_page.o `pkg-config --cflags --libs gtk+-3.0`
 
 main.o:main.c ./view/main_menu.h ./controller/controller.h
 	gcc -c main.c -I./view/ -I./controller/ `pkg-config --cflags --libs gtk+-3.0`
@@ -35,7 +35,10 @@ main_menu.o:./view/main_menu.c ./view/main_menu.h ./view/video_page.h
 	gcc -c ./view/main_menu.c -I./view/ -I./view/ `pkg-config --cflags --libs gtk+-3.0`
 
 video_page.o:./view/video_page.c ./view/video_page.h
-		gcc -c ./view/video_page.c -I./view/ `pkg-config --cflags --libs gtk+-3.0`
+	gcc -c ./view/video_page.c -I./view/ `pkg-config --cflags --libs gtk+-3.0`
+
+subtitle_page.o:./view/subtitle_page.c ./view/subtitle_page.h
+	gcc -c ./view/subtitle_page.c -I./view/ `pkg-config --cflags --libs gtk+-3.0`
 
 clean:
 	rm -rf *.o

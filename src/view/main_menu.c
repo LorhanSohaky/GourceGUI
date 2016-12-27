@@ -34,7 +34,7 @@ GtkWidget *add_notebook(GtkWidget *window){
     notebook=gtk_notebook_new();
     gtk_notebook_set_tab_pos(GTK_NOTEBOOK(notebook),GTK_POS_TOP);
     add_notebook_tab(notebook,"Video",init_video_page(window));
-    add_notebook_tab(notebook,"Subtitle",gtk_label_new("Test2"));
+    add_notebook_tab(notebook,"Subtitle",init_subtitle_page(window));
     add_notebook_tab(notebook,"Other settings",gtk_label_new("Test3"));
     return notebook;
 }

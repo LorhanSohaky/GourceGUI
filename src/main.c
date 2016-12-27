@@ -1,6 +1,6 @@
 #include <stdio.h>
+#include <controller.h>
 
-int main(int argc, char const *argv[]) {
-    //TODO add controler
-    return 0;
+int main(int argc, char *argv[]) {
+    return controller(argc,argv);
 }

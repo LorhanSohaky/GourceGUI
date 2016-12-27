@@ -25,11 +25,11 @@ all:Main clean
 Main:main.o main_menu.o controller.o video_page.o subtitle_page.o other_page.o
 	gcc -Wall -o prog.exe main.o main_menu.o controller.o video_page.o subtitle_page.o other_page.o `pkg-config --cflags --libs gtk+-3.0`
 
-main.o:main.c ./view/main_menu.h ./controller/controller.h
-	gcc -c main.c -I./view/ -I./controller/ `pkg-config --cflags --libs gtk+-3.0`
+main.o:main.c ./view/main_menu.h ./controller/controller.h ./model/gource.h
+	gcc -c main.c -I./view/ -I./controller/ -I./model/ `pkg-config --cflags --libs gtk+-3.0`
 
-controller.o:./controller/controller.c ./controller/controller.h ./view/main_menu.h
-	gcc -c ./controller/controller.c -I./controller/ -I./view/ `pkg-config --cflags --libs gtk+-3.0`
+controller.o:./controller/controller.c ./controller/controller.h ./view/main_menu.h ./model/gource.h
+	gcc -c ./controller/controller.c -I./controller/ -I./view/ -I./model/ `pkg-config --cflags --libs gtk+-3.0`
 
 main_menu.o:./view/main_menu.c ./view/main_menu.h ./view/video_page.h
 	gcc -c ./view/main_menu.c -I./view/ -I./view/ `pkg-config --cflags --libs gtk+-3.0`

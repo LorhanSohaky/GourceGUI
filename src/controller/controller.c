@@ -1,6 +1,7 @@
 #include <controller.h>
 
 int controller (int argc, char *argv[]){
+    _gource gource_settings;
     GtkApplication *app;
     int status;
 

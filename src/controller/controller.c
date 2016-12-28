@@ -14,7 +14,7 @@ int controller (int argc, char *argv[]){
     g_signal_connect (app, "activate", G_CALLBACK (activate),NULL);
     status = g_application_run (G_APPLICATION (app), argc, argv);
     g_object_unref (app);
-
+    print_gource();
     return status;
 }
 
@@ -65,9 +65,30 @@ void set_subtitle_color(GtkWidget *widget, gpointer data){
     gource_settings.subtitle.color=rgba_to_hex(rgba.red,rgba.green,rgba.blue);
 }
 
+//CALLBACKs other_page
 
+gboolean set_auto_skip(GtkWidget *widget, gpointer data){
+    gource_settings.other.auto_skip_seconds=gtk_spin_button_get_value(GTK_SPIN_BUTTON(widget));
+    return FALSE;
+}
 
+gboolean set_seconds_per_day(GtkWidget *widget, gpointer data){
+    gource_settings.other.seconds_per_day=gtk_spin_button_get_value(GTK_SPIN_BUTTON(widget));
+    return FALSE;
+}
 
+gboolean set_date_format(GtkWidget *widget, gpointer data){
+    gource_settings.other.date_format=gtk_entry_get_text(GTK_ENTRY(widget));
+    return FALSE;
+}
+
+void set_avatar_folder(GtkWidget *widget, gpointer data){
+    gource_settings.other.folder_with_users_avatar_icon=gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(widget));
+}
+
+void set_output_gource(GtkWidget *widget){
+    gource_settings.other.output_gorce=gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(widget));
+}
 
 
 

@@ -20,7 +20,7 @@ typedef struct{
 typedef struct{
     int auto_skip_seconds;
     int seconds_per_day;
-    char *date_format;
+    const char *date_format;
     char *folder_with_users_avatar_icon;
     char *color;
     char *output_gorce;

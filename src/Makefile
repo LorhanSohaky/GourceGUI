@@ -22,8 +22,8 @@
 
 all:Main clean
 
-Main:main.o main_menu.o controller.o video_page.o subtitle_page.o other_page.o utils.o
-	gcc -Wall -o prog.exe main.o main_menu.o controller.o video_page.o subtitle_page.o other_page.o utils.o `pkg-config --cflags --libs gtk+-3.0`
+Main:main.o main_menu.o controller.o video_page.o subtitle_page.o other_page.o utils.o gource.o
+	gcc -Wall -o prog.exe main.o main_menu.o controller.o video_page.o subtitle_page.o other_page.o utils.o gource.o `pkg-config --cflags --libs gtk+-3.0`
 
 main.o:main.c ./view/main_menu.h ./controller/controller.h ./model/gource.h
 	gcc -c main.c -I./view/ -I./controller/ -I./model/ `pkg-config --cflags --libs gtk+-3.0`
@@ -45,6 +45,9 @@ other_page.o:./view/other_page.c ./view/other_page.h ./controller/controller.h .
 
 utils.o:./model/utils.c ./model/utils.h
 	gcc -c ./model/utils.c -I./model
+
+gource.o:./model/gource.c ./model/gource.h
+	gcc -c ./model/gource.c -I./model
 
 clean:
 	rm -rf *.o

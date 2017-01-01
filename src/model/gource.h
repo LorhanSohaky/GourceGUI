@@ -32,4 +32,7 @@ typedef struct{
     _other other;
 }_gource;
 
+void init__gource(_gource *gource);
+void print_gource(_gource *gource);
+
 #endif

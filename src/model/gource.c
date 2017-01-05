@@ -44,8 +44,7 @@ void init__other(_gource *gource){
 void init_entry(char **destination){
     *destination = (char *) malloc(ENTRY_LENGTH);
     if(destination!=NULL){
-        destination=" ";
-        printf("%s\n",*destination);
+        *destination=" ";
     }
 }
 

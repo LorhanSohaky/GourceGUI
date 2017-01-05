@@ -4,8 +4,13 @@
 #include <stdbool.h>
 
 typedef struct{
+    char *value;
+    unsigned int size;
+}_string;
+
+typedef struct{
     char *log_file;
-    char *title;
+    _string title;
     const char *screen_mode;
     char *background_color;
     char *camera_mode;
@@ -22,7 +27,7 @@ typedef struct{
 typedef struct{
     int auto_skip_seconds;
     int seconds_per_day;
-    char *date_format;
+    _string date_format;
     char *folder_with_users_avatar_icon;
     char *color;
     char *output_gorce;

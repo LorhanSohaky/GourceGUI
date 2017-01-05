@@ -58,6 +58,7 @@ void save_dialog(GtkWidget *widget, gpointer data){
     gtk_file_filter_add_pattern (filter, "*.mp4");
     gtk_file_filter_set_name (filter,".mp4");
     GtkWidget *dialog=gtk_file_chooser_dialog_new ("Choose a file to save a video of Gource",GTK_WINDOW(window),GTK_FILE_CHOOSER_ACTION_SAVE,"Save",GTK_RESPONSE_ACCEPT,"Cancel",GTK_RESPONSE_CANCEL,NULL);
+    gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(dialog),"Untitled document.mp4");
     gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog),TRUE);
     gtk_file_chooser_add_filter (GTK_FILE_CHOOSER(dialog),filter);
     gtk_widget_show_all(dialog);

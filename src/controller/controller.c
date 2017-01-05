@@ -4,12 +4,16 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 
 _gource gource_settings;
 
 void set_font_name(GtkFontChooser *button);
 void set_font_size(GtkFontChooser *button);
 void remove_size_of_font_name(char *font_name);
+
+bool append_extension_when_necessary(GtkWidget *widget);
+void string_tolower(char *string);
 
 void free_memory(_gource *gource);
 
@@ -120,7 +124,13 @@ void set_avatar_folder(GtkWidget *widget, gpointer data){
 }
 
 void set_output_gource(GtkWidget *widget){
-    gource_settings.other.output_gorce=gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(widget));
+    if(append_extension_when_necessary(widget)){
+        gource_settings.other.output_gorce=gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(widget));
+    }else{
+        free_memory(&gource_settings);
+        fprintf(stderr, "Failed to allocate memory.\n");
+        exit(0);
+    }
 }
 
 
@@ -137,6 +147,30 @@ void set_font_size(GtkFontChooser *button){
 void remove_size_of_font_name(char *font_name){
     char *last_space=strrchr(font_name,' ');
     font_name[last_space-font_name]='\0';
+}
+
+
+bool append_extension_when_necessary(GtkWidget *widget){
+    char *tmp=gtk_file_chooser_get_current_name (GTK_FILE_CHOOSER(widget));
+    tmp=&tmp[strlen(tmp)-strlen(".MP4")];
+    string_tolower(tmp);
+    if (strcmp(tmp,".mp4")!=0) {
+        tmp=(char *) malloc(sizeof(char)*(strlen(gtk_file_chooser_get_current_name (GTK_FILE_CHOOSER(widget)))+strlen(".mp4")));
+        if(tmp!=NULL){
+            sprintf(tmp,"%s.mp4", gtk_file_chooser_get_current_name (GTK_FILE_CHOOSER(widget)));
+            gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER(widget),tmp);
+            free(tmp);
+        }else{
+            return false;
+        }
+    }
+    return true;
+}
+
+void string_tolower(char *string){
+    for(int i=0;i<strlen(string);i++){
+        string[i]=tolower(string[i]);
+    }
 }
 
 

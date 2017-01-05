@@ -3,6 +3,7 @@
 #include <gource.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 _gource gource_settings;
 
@@ -36,7 +37,12 @@ void set_log_file(GtkWidget *widget, gpointer data){
 }
 
 gboolean set_title(GtkWidget *widget, gpointer data){
-    //gource_settings.video.title=gtk_entry_get_text (GTK_ENTRY(widget));
+    copy_string(&gource_settings.video.title,gtk_entry_get_text (GTK_ENTRY(widget)));
+    if(gource_settings.video.title.size==0){
+        free_memory(&gource_settings);
+        fprintf(stderr, "Failed to allocate memory.\n");
+        exit(0);
+    }
     return FALSE;
 }
 
@@ -89,7 +95,12 @@ gboolean set_seconds_per_day(GtkWidget *widget, gpointer data){
 }
 
 gboolean set_date_format(GtkWidget *widget, gpointer data){
-    //gource_settings.other.date_format=gtk_entry_get_text(GTK_ENTRY(widget));
+    copy_string(&gource_settings.other.date_format,gtk_entry_get_text (GTK_ENTRY(widget)));
+    if(gource_settings.other.date_format.size==0){
+        free_memory(&gource_settings);
+        fprintf(stderr, "Failed to allocate memory.\n");
+        exit(0);
+    }
     return FALSE;
 }
 
@@ -113,6 +124,10 @@ void set_font_size(GtkFontChooser *button){
 
 
 void free_memory(_gource *gource){
-    free(gource->video.title);
-    free(gource->other.date_format);
+    if(gource->video.title.value!=NULL){
+        free(gource->video.title.value);
+    }
+    if(gource->other.date_format.value!=NULL){
+        free(gource->other.date_format.value);
+    }
 }

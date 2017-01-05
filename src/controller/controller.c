@@ -1,23 +1,31 @@
 #include <controller.h>
 #include <utils.h>
 #include <gource.h>
+#include <string.h>
+#include <stdlib.h>
 
 _gource gource_settings;
 
 void set_font_name(GtkFontChooser *button);
 void set_font_size(GtkFontChooser *button);
 
+void free_memory(_gource *gource);
+
 int controller (int argc, char *argv[]){
     GtkApplication *app;
-    int status;
+    int status=0;
 
     init__gource(&gource_settings);
-
-    app = gtk_application_new ("org.gourcegui", G_APPLICATION_FLAGS_NONE);
-    g_signal_connect (app, "activate", G_CALLBACK (activate),NULL);
-    status = g_application_run (G_APPLICATION (app), argc, argv);
-    g_object_unref (app);
-    print_gource(&gource_settings);
+    if(is__gource_OK(&gource_settings)){
+        app = gtk_application_new ("org.gourcegui", G_APPLICATION_FLAGS_NONE);
+        g_signal_connect (app, "activate", G_CALLBACK (activate),NULL);
+        status = g_application_run (G_APPLICATION (app), argc, argv);
+        print_gource(&gource_settings);
+        g_object_unref (app);
+        free_memory(&gource_settings);
+    }else{
+        fprintf(stderr, "Failed to allocate memory.\n");
+    }
     return status;
 }
 
@@ -28,7 +36,7 @@ void set_log_file(GtkWidget *widget, gpointer data){
 }
 
 gboolean set_title(GtkWidget *widget, gpointer data){
-    gource_settings.video.title=gtk_entry_get_text (GTK_ENTRY(widget));
+    //gource_settings.video.title=gtk_entry_get_text (GTK_ENTRY(widget));
     return FALSE;
 }
 
@@ -81,7 +89,7 @@ gboolean set_seconds_per_day(GtkWidget *widget, gpointer data){
 }
 
 gboolean set_date_format(GtkWidget *widget, gpointer data){
-    gource_settings.other.date_format=gtk_entry_get_text(GTK_ENTRY(widget));
+    //gource_settings.other.date_format=gtk_entry_get_text(GTK_ENTRY(widget));
     return FALSE;
 }
 
@@ -101,4 +109,10 @@ void set_font_name(GtkFontChooser *button){
 
 void set_font_size(GtkFontChooser *button){
     gource_settings.subtitle.font_size=gtk_font_chooser_get_font_size(button)/1000;
+}
+
+
+void free_memory(_gource *gource){
+    free(gource->video.title);
+    free(gource->other.date_format);
 }

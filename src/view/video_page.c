@@ -1,5 +1,6 @@
 #include <video_page.h>
 #include <controller.h>
+#include <gource.h>
 
 GtkWidget *init_video_page(GtkWidget *window){
     GtkWidget *grid,*widget;
@@ -49,7 +50,7 @@ GtkWidget *init_video_page(GtkWidget *window){
     widget=gtk_label_new("Background color: ");
     gtk_grid_attach(GTK_GRID(grid),widget,0,3,1,1);
 
-    gdk_rgba_parse(&rgba,"#555555");//Set default color
+    gdk_rgba_parse(&rgba,DEFAULT_BACKGROUND_COLOR);
     widget=gtk_color_button_new_with_rgba(&rgba);
     gtk_color_button_set_title (GTK_COLOR_BUTTON(widget),"Choose a color for the background");
     g_signal_connect (widget, "color-set", G_CALLBACK (set_background_color),NULL);

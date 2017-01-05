@@ -9,6 +9,7 @@ _gource gource_settings;
 
 void set_font_name(GtkFontChooser *button);
 void set_font_size(GtkFontChooser *button);
+void remove_size_of_font_name(char *font_name);
 
 void free_memory(_gource *gource);
 
@@ -53,7 +54,12 @@ void set_screen_mode(GtkWidget *widget, gpointer data){
 void set_background_color(GtkWidget *widget, gpointer data){
     GdkRGBA rgba;
     gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(widget),&rgba);
-    gource_settings.video.background_color=rgba_to_hex(rgba.red,rgba.green,rgba.blue);
+    copy_string(&gource_settings.video.background_color,rgba_to_hex(rgba.red,rgba.green,rgba.blue));
+    if(gource_settings.video.background_color.size==0){
+        free_memory(&gource_settings);
+        fprintf(stderr, "Failed to allocate memory.\n");
+        exit(0);
+    }
 }
 
 void set_camera_mode(GtkWidget *widget, gpointer data){
@@ -79,7 +85,12 @@ gboolean set_duration(GtkWidget *widget, gpointer data){
 void set_subtitle_color(GtkWidget *widget, gpointer data){
     GdkRGBA rgba;
     gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(widget),&rgba);
-    gource_settings.subtitle.color=rgba_to_hex(rgba.red,rgba.green,rgba.blue);
+    copy_string(&gource_settings.subtitle.color,rgba_to_hex(rgba.red,rgba.green,rgba.blue));
+    if(gource_settings.subtitle.color.size==0){
+        free_memory(&gource_settings);
+        fprintf(stderr, "Failed to allocate memory.\n");
+        exit(0);
+    }
 }
 
 //CALLBACKs other_page
@@ -116,10 +127,17 @@ void set_output_gource(GtkWidget *widget){
 
 void set_font_name(GtkFontChooser *button){
     gource_settings.subtitle.font_name=gtk_font_chooser_get_font(button);
+    printf("%s\n",gource_settings.subtitle.font_name);
+    remove_size_of_font_name(gource_settings.subtitle.font_name);
 }
 
 void set_font_size(GtkFontChooser *button){
     gource_settings.subtitle.font_size=gtk_font_chooser_get_font_size(button)/1000;
+}
+
+void remove_size_of_font_name(char *font_name){
+    char *last_space=strrchr(font_name,' ');
+    font_name[last_space-font_name]='\0';
 }
 
 
@@ -127,6 +145,15 @@ void free_memory(_gource *gource){
     if(gource->video.title.value!=NULL){
         free(gource->video.title.value);
     }
+
+    if(gource->video.background_color.value!=NULL){
+        free(gource->video.background_color.value);
+    }
+
+    if(gource->subtitle.color.value!=NULL){
+        free(gource->subtitle.color.value);
+    }
+
     if(gource->other.date_format.value!=NULL){
         free(gource->other.date_format.value);
     }

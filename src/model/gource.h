@@ -3,6 +3,10 @@
 
 #include <stdbool.h>
 
+#define DEFAULT_SUBTITLE_DURATION 3 //I tested, so 3 it's a good number (LOL)
+static const char *DEFAULT_BACKGROUND_COLOR="#555555";
+static const char *DEFAULT_SUBTITLE_COLOR="#FFD700";
+
 typedef struct{
     char *value;
     unsigned int size;
@@ -12,7 +16,7 @@ typedef struct{
     char *log_file;
     _string title;
     const char *screen_mode;
-    char *background_color;
+    _string background_color;
     char *camera_mode;
 }_video;
 
@@ -21,7 +25,7 @@ typedef struct{
     char *font_name;
     int font_size;
     int duration;
-    char *color;
+    _string color;
 }_subtitle;
 
 typedef struct{
@@ -29,7 +33,6 @@ typedef struct{
     int seconds_per_day;
     _string date_format;
     char *folder_with_users_avatar_icon;
-    char *color;
     char *output_gorce;
 }_other;
 

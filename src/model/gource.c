@@ -1,9 +1,15 @@
 #include <gource.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+#define ENTRY_LENGTH 11 //10 + 1 for put '\0'
 
 void init__video(_gource *gource);
 void init__subtitle(_gource *gource);
 void init__other(_gource *gource);
+
+void init_entry(char **destination);
+bool is_malloc_OK(_gource *gource);
 
 void init__gource(_gource *gource){
     init__video(gource);
@@ -13,7 +19,7 @@ void init__gource(_gource *gource){
 
 void init__video(_gource *gource){
     gource->video.log_file=NULL;
-    gource->video.title=NULL;
+    init_entry(&gource->video.title);
     gource->video.screen_mode=NULL;
     gource->video.background_color=NULL;
     gource->video.camera_mode=NULL;
@@ -30,10 +36,29 @@ void init__subtitle(_gource *gource){
 void init__other(_gource *gource){
     gource->other.auto_skip_seconds=-1;
     gource->other.seconds_per_day=-1;
-    gource->other.date_format=NULL;
+    init_entry(&gource->other.date_format);
     gource->other.folder_with_users_avatar_icon=NULL;
-    gource->other.color=NULL;
     gource->other.output_gorce=NULL;
+}
+
+void init_entry(char **destination){
+    *destination = (char *) malloc(ENTRY_LENGTH);
+    if(destination!=NULL){
+        destination=" ";
+        printf("%s\n",*destination);
+    }
+}
+
+bool is__gource_OK(_gource *gource){
+    return is_malloc_OK(gource);
+}
+
+bool is_malloc_OK(_gource *gource){
+    if(gource->video.title==NULL || gource->other.date_format==NULL){
+        return false;
+    }else{
+        return true;
+    }
 }
 
 void print_gource(_gource *gource){
@@ -56,7 +81,6 @@ void print_gource(_gource *gource){
     printf("\tSeconds per day - %d\n", gource->other.seconds_per_day);
     printf("\tDate format - %s\n", gource->other.date_format);
     printf("\tFolder with users avatar icon - %s\n", gource->other.folder_with_users_avatar_icon);
-    printf("\tColor - %s\n", gource->other.color);
     printf("\tOutput gource - %s\n", gource->other.output_gorce);
 
 }

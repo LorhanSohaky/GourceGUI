@@ -127,7 +127,6 @@ void set_output_gource(GtkWidget *widget){
 
 void set_font_name(GtkFontChooser *button){
     gource_settings.subtitle.font_name=gtk_font_chooser_get_font(button);
-    printf("%s\n",gource_settings.subtitle.font_name);
     remove_size_of_font_name(gource_settings.subtitle.font_name);
 }
 

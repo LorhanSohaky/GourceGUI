@@ -52,7 +52,7 @@ gboolean set_title(GtkWidget *widget, gpointer data){
 }
 
 void set_screen_mode(GtkWidget *widget, gpointer data){
-    //TODO Implement
+    gource_settings.video.screen_mode=gtk_combo_box_text_get_active_text (GTK_COMBO_BOX_TEXT(widget));
 }
 
 void set_background_color(GtkWidget *widget, gpointer data){
@@ -67,7 +67,7 @@ void set_background_color(GtkWidget *widget, gpointer data){
 }
 
 void set_camera_mode(GtkWidget *widget, gpointer data){
-    //TODO Implement
+    gource_settings.video.camera_mode=gtk_combo_box_text_get_active_text (GTK_COMBO_BOX_TEXT(widget));
 }
 
 //CALLBACKs of subtitle_page

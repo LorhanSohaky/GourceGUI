@@ -4,8 +4,6 @@
 
 GtkWidget *init_video_page(GtkWidget *window){
     GtkWidget *grid,*widget;
-    GtkListStore *liststore;
-    GtkCellRenderer *column;
     GdkRGBA rgba;
     grid=gtk_grid_new();
     gtk_grid_set_column_homogeneous(GTK_GRID(grid),TRUE);
@@ -29,23 +27,17 @@ GtkWidget *init_video_page(GtkWidget *window){
     widget=gtk_label_new("Screen Mode: ");
     gtk_grid_attach(GTK_GRID(grid),widget,0,2,1,1);
 
-    liststore = gtk_list_store_new(1, G_TYPE_STRING);
-    widget = gtk_combo_box_new_with_model(GTK_TREE_MODEL(liststore));//Make a drop down list same of https://developer.gnome.org/hig/stable/drop-down-lists.html.en
-    gtk_list_store_insert_with_values(liststore, NULL, -1,0, "fullscreen",-1);
-    gtk_list_store_insert_with_values(liststore, NULL, -1,0, "windowed",-1);
-    gtk_list_store_insert_with_values(liststore, NULL, -1,0, "640 x 480",-1);
-    gtk_list_store_insert_with_values(liststore, NULL, -1,0, "720 x 480",-1);
-    gtk_list_store_insert_with_values(liststore, NULL, -1,0, "1280 x 720",-1);
-    gtk_list_store_insert_with_values(liststore, NULL, -1,0, "1920 x 1080",-1);
-    gtk_list_store_insert_with_values(liststore, NULL, -1,0, "3840 x 2160",-1);
-    gtk_list_store_insert_with_values(liststore, NULL, -1,0, "7680 x 4320",-1);
-    column = gtk_cell_renderer_text_new();
-    gtk_combo_box_set_active(GTK_COMBO_BOX(widget), 0);
-    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(widget), column, TRUE);
-    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(widget), column,"text", 0,NULL);
+    widget=gtk_combo_box_text_new_with_entry();//TODO Make a drop down list same of https://developer.gnome.org/hig/stable/drop-down-lists.html.en
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "fullscreen");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "windowed");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "640 x 480");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "720 x 480");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "1280 x 720");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "1920 x 1080");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "3840 x 2160");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "7680 x 4320");
     g_signal_connect (widget, "changed", G_CALLBACK (set_screen_mode),NULL);
     gtk_grid_attach(GTK_GRID(grid),widget,1,2,1,1);
-    g_object_unref(liststore);
 
     widget=gtk_label_new("Background color: ");
     gtk_grid_attach(GTK_GRID(grid),widget,0,3,1,1);
@@ -59,17 +51,12 @@ GtkWidget *init_video_page(GtkWidget *window){
     widget=gtk_label_new("Camera mode: ");
     gtk_grid_attach(GTK_GRID(grid),widget,0,4,1,1);
 
-    liststore = gtk_list_store_new(1, G_TYPE_STRING);
-    widget = gtk_combo_box_new_with_model(GTK_TREE_MODEL(liststore));
-    gtk_list_store_insert_with_values(liststore, NULL, -1,0, "Overview",-1);
-    gtk_list_store_insert_with_values(liststore, NULL, -1,0, "Track",-1);
-    column = gtk_cell_renderer_text_new();
-    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(widget), column, TRUE);
-    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(widget), column,"text", 0,NULL);
-    gtk_combo_box_set_active(GTK_COMBO_BOX(widget), 0);
+    widget = gtk_combo_box_text_new();
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), " ");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "Overview");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "Track");
     g_signal_connect (widget, "changed", G_CALLBACK (set_camera_mode),NULL);
     gtk_grid_attach(GTK_GRID(grid),widget,1,4,1,1);
-    g_object_unref(liststore);
 
     return grid;
 }

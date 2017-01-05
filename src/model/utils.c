@@ -23,3 +23,18 @@ void copy_string(_string *destination, const char *source){
         }
     }
 }
+
+void append_string(_string *destination, const char *source){
+    if(strlen(source)+strlen(destination->value)+1<destination->size){
+        strcat(destination->value,source);
+    }else{
+        char *tmp=(char *)realloc(destination->value,strlen(source)+destination->size+1);
+        if(tmp!=NULL){
+            destination->size=strlen(source)+destination->size+1;
+            destination->value=tmp;
+            strcat(destination->value,source);
+        }else{
+            destination->size=0;
+        }
+    }
+}

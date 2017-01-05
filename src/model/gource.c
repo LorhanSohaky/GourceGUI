@@ -42,9 +42,12 @@ void init__other(_gource *gource){
 }
 
 void init_entry(char **destination){
-    *destination = (char *) malloc(ENTRY_LENGTH);
-    if(destination!=NULL){
-        *destination=" ";
+    *destination = (char *) malloc(ENTRY_LENGTH* sizeof(char));
+    if(*destination!=NULL){
+        for(int i=0;i<ENTRY_LENGTH-1;i++){
+            (*destination)[i]=' ';
+        }
+        (*destination)[ENTRY_LENGTH-1]='\0';
     }
 }
 

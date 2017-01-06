@@ -30,12 +30,12 @@ GtkWidget *init_video_page(GtkWidget *window){
     widget=gtk_combo_box_text_new_with_entry();//TODO Make a drop down list same of https://developer.gnome.org/hig/stable/drop-down-lists.html.en
     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "Fullscreen");
     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "Windowed");
-    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "640 x 480");
-    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "720 x 480");
-    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "1280 x 720");
-    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "1920 x 1080");
-    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "3840 x 2160");
-    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "7680 x 4320");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "640x480");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "720x480");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "1280x720");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "1920x1080");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "3840x2160");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "7680x4320");
     g_signal_connect (widget, "changed", G_CALLBACK (set_screen_mode),NULL);
     gtk_grid_attach(GTK_GRID(grid),widget,1,2,1,1);
 

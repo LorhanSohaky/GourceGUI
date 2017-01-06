@@ -3,6 +3,7 @@
 #include <subtitle_page.h>
 #include <other_page.h>
 #include <gtk/gtk.h>
+#include <controller.h>
 
 GtkWidget *add_notebook(GtkWidget *window);
 void add_notebook_tab(GtkWidget *notebook, char *label, GtkWidget *page);
@@ -19,6 +20,7 @@ void activate (GtkApplication* app,gpointer user_data){
 
   //button properties
   button=gtk_button_new_with_label("Execute");//TODO change background color:#5cb85c border:#4cae4c
+  g_signal_connect (button, "clicked", G_CALLBACK (execute),window);
   gtk_widget_set_valign(button,GTK_ALIGN_END);//TODO on hover background color:#449d44 border:#398439
 
   //notebook properties

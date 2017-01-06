@@ -28,8 +28,8 @@ GtkWidget *init_video_page(GtkWidget *window){
     gtk_grid_attach(GTK_GRID(grid),widget,0,2,1,1);
 
     widget=gtk_combo_box_text_new_with_entry();//TODO Make a drop down list same of https://developer.gnome.org/hig/stable/drop-down-lists.html.en
-    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "fullscreen");
-    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "windowed");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "Fullscreen");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "Windowed");
     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "640 x 480");
     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "720 x 480");
     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), "1280 x 720");

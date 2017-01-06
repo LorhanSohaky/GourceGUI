@@ -22,17 +22,17 @@
 
 all:Main clean
 
-Main:main.o main_menu.o controller.o video_page.o subtitle_page.o other_page.o utils.o gource.o
-	gcc -Wall -o prog.exe main.o main_menu.o controller.o video_page.o subtitle_page.o other_page.o utils.o gource.o `pkg-config --cflags --libs gtk+-3.0`
+Main:main.o main_menu.o controller.o video_page.o subtitle_page.o other_page.o utils.o gource.o process_creator.o
+	gcc -Wall -o prog.exe main.o main_menu.o controller.o video_page.o subtitle_page.o other_page.o utils.o gource.o process_creator.o `pkg-config --cflags --libs gtk+-3.0`
 
 main.o:main.c ./view/main_menu.h ./controller/controller.h ./model/gource.h
 	gcc -c main.c -I./view/ -I./controller/ -I./model/ `pkg-config --cflags --libs gtk+-3.0`
 
-controller.o:./controller/controller.c ./controller/controller.h ./view/main_menu.h ./model/gource.h ./model/utils.h
-	gcc -c ./controller/controller.c -I./controller/ -I./view/ -I./model/ -I./model/ `pkg-config --cflags --libs gtk+-3.0`
+controller.o:./controller/controller.c ./controller/controller.h ./view/main_menu.h ./model/gource.h ./model/utils.h ./model/process_creator.h
+	gcc -c ./controller/controller.c -I./controller/ -I./view/ -I./model/ -I./model/ -I./model/`pkg-config --cflags --libs gtk+-3.0`
 
-main_menu.o:./view/main_menu.c ./view/main_menu.h ./view/video_page.h
-	gcc -c ./view/main_menu.c -I./view/ -I./view/ `pkg-config --cflags --libs gtk+-3.0`
+main_menu.o:./view/main_menu.c ./view/main_menu.h ./view/video_page.h ./controller/controller.h
+	gcc -c ./view/main_menu.c -I./view/ -I./view/ -I ./controller/ `pkg-config --cflags --libs gtk+-3.0`
 
 video_page.o:./view/video_page.c ./view/video_page.h ./controller/controller.h ./model/gource.h
 	gcc -c ./view/video_page.c -I./view/ -I./controller/ -I./model/ `pkg-config --cflags --libs gtk+-3.0`
@@ -48,6 +48,9 @@ utils.o:./model/utils.c ./model/utils.h
 
 gource.o:./model/gource.c ./model/gource.h
 	gcc -c ./model/gource.c -I./model
+
+process_creator.o:./model/process_creator.c ./model/process_creator.h
+	gcc -c ./model/process_creator.c -I./model
 
 clean:
 	rm -rf *.o

@@ -15,7 +15,7 @@ GtkWidget *init_subtitle_page(GtkWidget *window){
     widget=gtk_label_new("Subtitle file: ");
     gtk_grid_attach(GTK_GRID(grid),widget,0,0,1,1);
 
-    widget=gtk_file_chooser_button_new ("Choose a LOG file",GTK_FILE_CHOOSER_ACTION_OPEN);
+    widget=gtk_file_chooser_button_new ("Choose a file for the subtitle",GTK_FILE_CHOOSER_ACTION_OPEN);
     g_signal_connect (widget, "file-set", G_CALLBACK (set_subtitle_file),NULL);
     gtk_grid_attach(GTK_GRID(grid),widget,1,0,1,1);
 

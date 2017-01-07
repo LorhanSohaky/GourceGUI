@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <utils.h>
 
-#define STRING_DEFAULT_LENGTH 8 //7 + 1 for put '\0'
+#define STRING_DEFAULT_LENGTH 7 //6 + 1 for put '\0'
 
 void init__video(_gource *gource);
 void init__subtitle(_gource *gource);
@@ -37,7 +37,7 @@ void init__subtitle(_gource *gource){
 void init__other(_gource *gource){
     gource->other.auto_skip_seconds=0;
     gource->other.seconds_per_day=0;
-    init__string(&gource->other.date_format, "       ");
+    init__string(&gource->other.date_format, " ");
     gource->other.folder_with_users_avatar_icon=NULL;
     gource->other.output_gorce=NULL;
 }

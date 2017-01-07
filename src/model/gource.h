@@ -7,6 +7,8 @@
 static const char *DEFAULT_BACKGROUND_COLOR="#555555";
 static const char *DEFAULT_SUBTITLE_COLOR="#FFD700";
 
+#define NUMBER_OF_FIELDS 15
+
 typedef struct{
     char *value;
     unsigned int size;
@@ -15,7 +17,7 @@ typedef struct{
 typedef struct{
     char *log_file;
     _string title;
-    const char *screen_mode;
+    char *screen_mode;
     _string background_color;
     char *camera_mode;
 }_video;

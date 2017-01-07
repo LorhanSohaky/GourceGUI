@@ -9,4 +9,6 @@ void copy_string(_string *destination, const char *source);
 
 void append_string(_string *destination, const char *source);
 
+int length_of_int(int value);
+
 #endif

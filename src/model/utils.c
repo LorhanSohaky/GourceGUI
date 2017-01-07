@@ -38,3 +38,12 @@ void append_string(_string *destination, const char *source){
         }
     }
 }
+
+int length_of_int(int value){
+    int length=1;
+    while(value/10!=0){
+        value=value/10;
+        length++;
+    }
+    return length;
+}

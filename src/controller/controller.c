@@ -335,19 +335,64 @@ void copy_number_to_string(_string *string, int value){
 
 
 void free_memory(_gource *gource){
+
+    //Free video
+    if(gource->video.log_file!=NULL){
+        g_free(gource->video.log_file);
+    }
+
     if(gource->video.title.value!=NULL){
         free(gource->video.title.value);
+    }
+
+    if(gource->video.screen_mode!=NULL){
+        g_free(gource->video.screen_mode);
     }
 
     if(gource->video.background_color.value!=NULL){
         free(gource->video.background_color.value);
     }
 
-    if(gource->subtitle.color.value!=NULL){
+    if(gource->video.camera_mode!=NULL){
+        g_free(gource->video.camera_mode);
+    }
+
+
+    //Free subtitle
+    if(gource->subtitle.subtitle_file!=NULL){
+        g_free(gource->subtitle.subtitle_file);
+    }
+
+    if(gource->subtitle.font_size.size!=0){
+        free(gource->subtitle.font_size.value);
+    }
+
+    if(gource->subtitle.duration.size!=0){
+        free(gource->subtitle.duration.value);
+    }
+
+    if(gource->subtitle.color.size!=0){
         free(gource->subtitle.color.value);
     }
 
-    if(gource->other.date_format.value!=NULL){
+    //Free other
+    if(gource->other.auto_skip_seconds.size!=0){
+        free(gource->other.auto_skip_seconds.value);
+    }
+
+    if(gource->other.seconds_per_day.size!=0){
+        free(gource->other.seconds_per_day.value);
+    }
+
+    if(gource->other.date_format.size!=0){
         free(gource->other.date_format.value);
+    }
+
+    if(gource->other.folder_with_users_avatar_icon!=NULL){
+        g_free(gource->other.folder_with_users_avatar_icon);
+    }
+
+    if(gource->other.output_gorce!=NULL){
+        g_free(gource->other.output_gorce);
     }
 }

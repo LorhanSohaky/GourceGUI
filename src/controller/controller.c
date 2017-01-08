@@ -22,7 +22,7 @@ void add_to_argv_valid_field(_gource *gource,char **argv,int *size);
 void add_to_argv(char **argv,int *size,char *option, char *value);
 
 void prepare_color(char *color);
-void prepare_screen_mode(char *screen_mode);
+void prepare_screen_mode(char **screen_mode);
 
 void copy_number_to_string(_string *string, int value);
 
@@ -228,12 +228,11 @@ void add_to_argv_valid_field(_gource *gource,char **argv,int *size){
 
     if(gource->video.screen_mode!=NULL){
         if(strcmp(gource->video.screen_mode,"Fullscreen")==0){
-            printf("aqui\n");
             add_to_argv(argv,size,"--fullscreen",NULL);
         }else if(strcmp(gource->video.screen_mode,"Windowed")==0){
             add_to_argv(argv,size,"--windowed",NULL);
         }else{
-            prepare_screen_mode(gource->video.screen_mode);
+            prepare_screen_mode(&gource->video.screen_mode);
             add_to_argv(argv,size,NULL,gource->video.screen_mode);
         }
     }
@@ -249,7 +248,7 @@ void add_to_argv_valid_field(_gource *gource,char **argv,int *size){
     if(gource->subtitle.subtitle_file!=NULL){
         add_to_argv(argv,size,"--caption-file",gource->subtitle.subtitle_file);
     }
-    
+
     if(atoi(gource->subtitle.font_size.value)!=0){
         add_to_argv(argv,size,"--font-size",gource->subtitle.font_size.value);
     }
@@ -306,12 +305,12 @@ void prepare_color(char *color){//Remove # from string
     }
 }
 
-void prepare_screen_mode(char *screen_mode){
-    char *tmp=g_try_malloc (strlen(screen_mode)+2);
+void prepare_screen_mode(char **screen_mode){
+    char *tmp=malloc (strlen(*screen_mode)+2);
     if(tmp!=NULL){
-        sprintf(tmp,"-%s",screen_mode);
-        g_free(screen_mode);
-        screen_mode=tmp;
+        sprintf(tmp,"-%s",*screen_mode);
+        g_free(*screen_mode);
+        *screen_mode=tmp;
     }
 }
 

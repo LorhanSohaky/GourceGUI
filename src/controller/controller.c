@@ -15,8 +15,6 @@ void set_font_name(GtkFontChooser *button);
 void set_font_size(GtkFontChooser *button);
 void remove_size_of_font_name(char *font_name);
 
-char **argva;
-
 bool append_extension_when_necessary(GtkWidget *widget);
 void string_tolower(char *string);
 
@@ -26,17 +24,18 @@ void add_to_argv(char **argv,int *size,char *option, char *value);
 void prepare_color(char *color);
 void prepare_screen_mode(char *screen_mode);
 
+void copy_number_to_string(_string *string, int value);
+
 void free_memory(_gource *gource);
 
 int controller (int argc, char *argv[]){
     GtkApplication *app;
     int status=0;
-    argva=argv;
     init__gource(&gource_settings);
     if(is__gource_OK(&gource_settings)){
         app = gtk_application_new ("org.gourcegui", G_APPLICATION_FLAGS_NONE);
         g_signal_connect (app, "activate", G_CALLBACK (activate),NULL);
-        status = g_application_run (G_APPLICATION (app), 0, NULL);
+        status = g_application_run (G_APPLICATION (app), argc, argv);
         g_object_unref (app);
         free_memory(&gource_settings);
     }else{
@@ -52,7 +51,7 @@ void execute(GtkWidget *widget, gpointer data){
     argv=(char **)malloc(sizeof(char **)*(2*NUMBER_OF_FIELDS+1+ARGS_TO_OUTPUT_GOURCE));
     if(argv!=NULL){
         add_to_argv_valid_field( &gource_settings, argv, &number_of_fields);
-        call_prog("/usr/bin/gource",argva,number_of_fields);
+        call_prog("/usr/bin/gource",argv,number_of_fields);
     }else{
         free_memory(&gource_settings);
         fprintf(stderr, "Failed to allocate memory.\n");
@@ -109,7 +108,12 @@ void set_font(GtkWidget *widget, gpointer data){
 }
 
 gboolean set_duration(GtkWidget *widget, gpointer data){
-    gource_settings.subtitle.duration=gtk_spin_button_get_value(GTK_SPIN_BUTTON(widget));
+    copy_number_to_string(&gource_settings.subtitle.duration,gtk_spin_button_get_value(GTK_SPIN_BUTTON(widget)));
+    if(gource_settings.subtitle.duration.size==0){
+        free_memory(&gource_settings);
+        fprintf(stderr, "Failed to allocate memory.\n");
+        exit(0);
+    }
     return FALSE;
 }
 
@@ -127,12 +131,22 @@ void set_subtitle_color(GtkWidget *widget, gpointer data){
 //CALLBACKs other_page
 
 gboolean set_auto_skip(GtkWidget *widget, gpointer data){
-    gource_settings.other.auto_skip_seconds=gtk_spin_button_get_value(GTK_SPIN_BUTTON(widget));
+    copy_number_to_string(&gource_settings.other.auto_skip_seconds,gtk_spin_button_get_value(GTK_SPIN_BUTTON(widget)));
+    if(gource_settings.other.auto_skip_seconds.size==0){
+        free_memory(&gource_settings);
+        fprintf(stderr, "Failed to allocate memory.\n");
+        exit(0);
+    }
     return FALSE;
 }
 
 gboolean set_seconds_per_day(GtkWidget *widget, gpointer data){
-    gource_settings.other.seconds_per_day=gtk_spin_button_get_value(GTK_SPIN_BUTTON(widget));
+    copy_number_to_string(&gource_settings.other.seconds_per_day,gtk_spin_button_get_value(GTK_SPIN_BUTTON(widget)));
+    if(gource_settings.other.seconds_per_day.size==0){
+        free_memory(&gource_settings);
+        fprintf(stderr, "Failed to allocate memory.\n");
+        exit(0);
+    }
     return FALSE;
 }
 
@@ -168,7 +182,7 @@ void set_font_name(GtkFontChooser *button){
 }
 
 void set_font_size(GtkFontChooser *button){
-    gource_settings.subtitle.font_size=gtk_font_chooser_get_font_size(button)/1000;
+    copy_number_to_string(&gource_settings.subtitle.font_size,gtk_font_chooser_get_font_size(button)/1000);
 }
 
 void remove_size_of_font_name(char *font_name){
@@ -235,34 +249,18 @@ void add_to_argv_valid_field(_gource *gource,char **argv,int *size){
     if(gource->subtitle.subtitle_file!=NULL){
         add_to_argv(argv,size,"--caption-file",gource->subtitle.subtitle_file);
     }
-
-    if(gource->subtitle.font_size!=-1){
-        tmp=malloc(length_of_int(gource->subtitle.font_size)+1);
-        if(tmp!=NULL){
-            sprintf(tmp,"%d",gource->subtitle.font_size);
-            add_to_argv(argv,size,"--font-size",tmp);
-        }
+    
+    if(atoi(gource->subtitle.font_size.value)!=0){
+        add_to_argv(argv,size,"--font-size",gource->subtitle.font_size.value);
     }
 
-    tmp=malloc(length_of_int(gource->subtitle.duration)+1);
-    if(tmp!=NULL){
-        sprintf(tmp,"%d",gource->subtitle.duration);
-        add_to_argv(argv,size,"--caption-duration",tmp);
-    }
+    add_to_argv(argv,size,"--caption-duration",gource->subtitle.duration.value);
 
     add_to_argv(argv,size,"--caption-colour",gource->subtitle.color.value);
 
-    tmp=malloc(length_of_int(gource->other.auto_skip_seconds)+1);
-    if(tmp!=NULL){
-        sprintf(tmp,"%d",gource->other.auto_skip_seconds);
-        add_to_argv(argv,size,"--auto-skip-seconds",tmp);
-    }
+    add_to_argv(argv,size,"--auto-skip-seconds",gource->other.auto_skip_seconds.value);
 
-    tmp=malloc(length_of_int(gource->other.seconds_per_day)+1);
-    if(tmp!=NULL){
-        sprintf(tmp,"%d",gource->other.seconds_per_day);
-        add_to_argv(argv,size,"--seconds-per-day",tmp);
-    }
+    add_to_argv(argv,size,"--seconds-per-day",gource->other.seconds_per_day.value);
 
     if(strcmp(gource->other.date_format.value," ")!=0){
         add_to_argv(argv,size,"--date-format",gource->other.date_format.value);
@@ -314,6 +312,21 @@ void prepare_screen_mode(char *screen_mode){
         sprintf(tmp,"-%s",screen_mode);
         g_free(screen_mode);
         screen_mode=tmp;
+    }
+}
+
+void copy_number_to_string(_string *string, int value){
+    if(length_of_int(value)<string->size){
+        sprintf(string->value,"%d",value);
+    }else{
+        char *tmp=(char *)realloc(string->value,length_of_int(value)+string->size+1);
+        if(tmp!=NULL){
+            string->size=length_of_int(value)+string->size+1;
+            string->value=tmp;
+            sprintf(string->value,"%d",value);
+        }else{
+            string->size=0;
+        }
     }
 }
 

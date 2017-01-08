@@ -257,9 +257,13 @@ void add_to_argv_valid_field(_gource *gource,char **argv,int *size){
 
     add_to_argv(argv,size,"--caption-colour",gource->subtitle.color.value);
 
-    add_to_argv(argv,size,"--auto-skip-seconds",gource->other.auto_skip_seconds.value);
+    if(atoi(gource->other.auto_skip_seconds.value)!=0){
+        add_to_argv(argv,size,"--auto-skip-seconds",gource->other.auto_skip_seconds.value);
+    }
 
-    add_to_argv(argv,size,"--seconds-per-day",gource->other.seconds_per_day.value);
+    if(atoi(gource->other.seconds_per_day.value)!=0){
+        add_to_argv(argv,size,"--seconds-per-day",gource->other.seconds_per_day.value);
+    }
 
     if(strcmp(gource->other.date_format.value," ")!=0){
         add_to_argv(argv,size,"--date-format",gource->other.date_format.value);
@@ -306,7 +310,7 @@ void prepare_color(char *color){//Remove # from string
 }
 
 void prepare_screen_mode(char **screen_mode){
-    char *tmp=malloc (strlen(*screen_mode)+2);
+    char *tmp=g_try_malloc(strlen(*screen_mode)+2);
     if(tmp!=NULL){
         sprintf(tmp,"-%s",*screen_mode);
         g_free(*screen_mode);

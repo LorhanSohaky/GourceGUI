@@ -1,4 +1,5 @@
 #include <controller.h>
+#include <process_creator.h>
 #include <utils.h>
 #include <gource.h>
 #include <string.h>
@@ -8,31 +9,57 @@
 
 _gource gource_settings;
 
+#define ARGS_TO_OUTPUT_GOURCE 25
+
 void set_font_name(GtkFontChooser *button);
 void set_font_size(GtkFontChooser *button);
 void remove_size_of_font_name(char *font_name);
 
+char **argva;
+
 bool append_extension_when_necessary(GtkWidget *widget);
 void string_tolower(char *string);
+
+void add_to_argv_valid_field(_gource *gource,char **argv,int *size);
+void add_to_argv(char **argv,int *size,char *option, char *value);
+
+void prepare_color(char *color);
+void prepare_screen_mode(char *screen_mode);
 
 void free_memory(_gource *gource);
 
 int controller (int argc, char *argv[]){
     GtkApplication *app;
     int status=0;
-
+    argva=argv;
     init__gource(&gource_settings);
     if(is__gource_OK(&gource_settings)){
         app = gtk_application_new ("org.gourcegui", G_APPLICATION_FLAGS_NONE);
         g_signal_connect (app, "activate", G_CALLBACK (activate),NULL);
-        status = g_application_run (G_APPLICATION (app), argc, argv);
-        print_gource(&gource_settings);
+        status = g_application_run (G_APPLICATION (app), 0, NULL);
         g_object_unref (app);
         free_memory(&gource_settings);
     }else{
         fprintf(stderr, "Failed to allocate memory.\n");
     }
     return status;
+}
+
+//CALLBACKs of main_menu
+void execute(GtkWidget *widget, gpointer data){
+    int number_of_fields=0;
+    char **argv;
+    argv=(char **)malloc(sizeof(char **)*(2*NUMBER_OF_FIELDS+1+ARGS_TO_OUTPUT_GOURCE));
+    if(argv!=NULL){
+        add_to_argv_valid_field( &gource_settings, argv, &number_of_fields);
+        call_prog("/usr/bin/gource",argva,number_of_fields);
+    }else{
+        free_memory(&gource_settings);
+        fprintf(stderr, "Failed to allocate memory.\n");
+        exit(0);
+    }
+    print_gource(&gource_settings);
+
 }
 
 //CALLBACKs of video_page
@@ -170,6 +197,123 @@ bool append_extension_when_necessary(GtkWidget *widget){
 void string_tolower(char *string){
     for(int i=0;i<strlen(string);i++){
         string[i]=tolower(string[i]);
+    }
+}
+
+void add_to_argv_valid_field(_gource *gource,char **argv,int *size){
+    char *tmp;
+    prepare_color(gource->video.background_color.value);
+    prepare_color(gource->subtitle.color.value);
+    if(gource->video.log_file!=NULL){
+        add_to_argv(argv,size,NULL,gource->video.log_file);
+    }
+
+    if(strcmp(gource->video.title.value, " ")!=0){// space=default value
+        add_to_argv(argv,size,"--title",gource->video.title.value);
+    }
+
+    if(gource->video.screen_mode!=NULL){
+        if(strcmp(gource->video.screen_mode,"Fullscreen")==0){
+            printf("aqui\n");
+            add_to_argv(argv,size,"--fullscreen",NULL);
+        }else if(strcmp(gource->video.screen_mode,"Windowed")==0){
+            add_to_argv(argv,size,"--windowed",NULL);
+        }else{
+            prepare_screen_mode(gource->video.screen_mode);
+            add_to_argv(argv,size,NULL,gource->video.screen_mode);
+        }
+    }
+
+    if(gource->video.camera_mode!=NULL){
+        if(strcmp(gource->video.camera_mode,"Overview")==0){
+            add_to_argv(argv,size,"--camera-mode","overview");
+        }else if(strcmp(gource->video.camera_mode,"Track")==0){
+            add_to_argv(argv,size,"--camera-mode","track");
+        }
+    }
+
+    if(gource->subtitle.subtitle_file!=NULL){
+        add_to_argv(argv,size,"--caption-file",gource->subtitle.subtitle_file);
+    }
+
+    if(gource->subtitle.font_size!=-1){
+        tmp=malloc(length_of_int(gource->subtitle.font_size)+1);
+        if(tmp!=NULL){
+            sprintf(tmp,"%d",gource->subtitle.font_size);
+            add_to_argv(argv,size,"--font-size",tmp);
+        }
+    }
+
+    tmp=malloc(length_of_int(gource->subtitle.duration)+1);
+    if(tmp!=NULL){
+        sprintf(tmp,"%d",gource->subtitle.duration);
+        add_to_argv(argv,size,"--caption-duration",tmp);
+    }
+
+    add_to_argv(argv,size,"--caption-colour",gource->subtitle.color.value);
+
+    tmp=malloc(length_of_int(gource->other.auto_skip_seconds)+1);
+    if(tmp!=NULL){
+        sprintf(tmp,"%d",gource->other.auto_skip_seconds);
+        add_to_argv(argv,size,"--auto-skip-seconds",tmp);
+    }
+
+    tmp=malloc(length_of_int(gource->other.seconds_per_day)+1);
+    if(tmp!=NULL){
+        sprintf(tmp,"%d",gource->other.seconds_per_day);
+        add_to_argv(argv,size,"--seconds-per-day",tmp);
+    }
+
+    if(strcmp(gource->other.date_format.value," ")!=0){
+        add_to_argv(argv,size,"--date-format",gource->other.date_format.value);
+    }
+
+    if(gource->other.folder_with_users_avatar_icon!=NULL){
+        add_to_argv(argv,size,"--user-image-dir",gource->other.folder_with_users_avatar_icon);
+    }
+
+    if(gource->other.output_gorce!=NULL){
+        //TODO To Implement
+        /*add_to_argv(argv,size,"-o","-");
+        add_to_argv(argv,size,"|","/usr/bin/ffmpeg");
+        add_to_argv(argv,size,"-y","-r");
+        add_to_argv(argv,size,"60","-f");
+        add_to_argv(argv,size,"image2pipe","-vcodec");
+        add_to_argv(argv,size,"ppm","-i");
+        add_to_argv(argv,size,"-","-vcodec");
+        add_to_argv(argv,size,"libx264","-preset");
+        add_to_argv(argv,size,"ultrafast","-pix_fmt");
+        add_to_argv(argv,size,"yuv420p","-crf");
+        add_to_argv(argv,size,"1","-threads");
+        add_to_argv(argv,size,"0","-bf");
+        add_to_argv(argv,size,"0",gource->other.output_gorce);*/
+    }
+    argv[*size]=NULL;
+}
+
+void add_to_argv(char **argv,int *size,char *option, char *value){
+    if(option!=NULL){
+        argv[*size]=option;
+        (*size)++;
+    }
+    if(value!=NULL){
+        argv[*size]=value;
+        (*size)++;
+    }
+}
+
+void prepare_color(char *color){//Remove # from string
+    if(color[0]=='#'){
+        strcpy(color,&color[1]);
+    }
+}
+
+void prepare_screen_mode(char *screen_mode){
+    char *tmp=g_try_malloc (strlen(screen_mode)+2);
+    if(tmp!=NULL){
+        sprintf(tmp,"-%s",screen_mode);
+        g_free(screen_mode);
+        screen_mode=tmp;
     }
 }
 

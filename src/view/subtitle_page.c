@@ -1,6 +1,7 @@
 #include <subtitle_page.h>
 #include <controller.h>
 #include <gource.h>
+#include<stdlib.h>
 
 GtkWidget *init_subtitle_page(GtkWidget *window){
     GtkWidget *grid,*widget;
@@ -30,7 +31,7 @@ GtkWidget *init_subtitle_page(GtkWidget *window){
     gtk_grid_attach(GTK_GRID(grid),widget,0,2,1,1);
 
     widget=gtk_spin_button_new_with_range(0,100,1);
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(widget),DEFAULT_SUBTITLE_DURATION);
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(widget),atoi(DEFAULT_SUBTITLE_DURATION));
     g_signal_connect (widget, "focus-out-event", G_CALLBACK (set_duration),NULL);
     gtk_grid_attach(GTK_GRID(grid),widget,1,2,1,1);
 

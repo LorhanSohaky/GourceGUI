@@ -22,7 +22,7 @@ void prepare_screen_mode(char **screen_mode);
 
 void copy_number_to_string(_string *string, int value);
 
-void free_memory(_gource *gource);
+void free_memory(_gource *gource, bool is_erro);
 
 int controller (int argc, char *argv[]){
     GtkApplication *app;
@@ -33,9 +33,9 @@ int controller (int argc, char *argv[]){
         g_signal_connect (app, "activate", G_CALLBACK (activate),NULL);
         status = g_application_run (G_APPLICATION (app), argc, argv);
         g_object_unref (app);
-        free_memory(&gource_settings);
+        free_memory(&gource_settings,false);
     }else{
-        fprintf(stderr, "Failed to allocate memory.\n");
+        free_memory(&gource_settings,true);
     }
     return status;
 }
@@ -49,9 +49,7 @@ void execute(GtkWidget *widget, gpointer data){
         add_to_argv_valid_field( &gource_settings, argv, &number_of_fields);
         call_prog("/usr/bin/gource",argv,number_of_fields);
     }else{
-        free_memory(&gource_settings);
-        fprintf(stderr, "Failed to allocate memory.\n");
-        exit(0);
+        free_memory(&gource_settings,true);
     }
     print_gource(&gource_settings);
 
@@ -66,9 +64,7 @@ void set_log_file(GtkWidget *widget, gpointer data){
 gboolean set_title(GtkWidget *widget, gpointer data){
     copy_string(&gource_settings.video.title,gtk_entry_get_text (GTK_ENTRY(widget)));
     if(gource_settings.video.title.size==0){
-        free_memory(&gource_settings);
-        fprintf(stderr, "Failed to allocate memory.\n");
-        exit(0);
+        free_memory(&gource_settings,true);
     }
     return FALSE;
 }
@@ -82,9 +78,7 @@ void set_background_color(GtkWidget *widget, gpointer data){
     gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(widget),&rgba);
     copy_string(&gource_settings.video.background_color,rgba_to_hex(rgba.red,rgba.green,rgba.blue));
     if(gource_settings.video.background_color.size==0){
-        free_memory(&gource_settings);
-        fprintf(stderr, "Failed to allocate memory.\n");
-        exit(0);
+        free_memory(&gource_settings,true);
     }
 }
 
@@ -101,9 +95,7 @@ void set_subtitle_file(GtkWidget *widget, gpointer data){
 gboolean set_font_size(GtkWidget *widget, gpointer data){
     copy_number_to_string(&gource_settings.subtitle.font_size,gtk_spin_button_get_value(GTK_SPIN_BUTTON(widget)));
     if(gource_settings.subtitle.font_size.size==0){
-        free_memory(&gource_settings);
-        fprintf(stderr, "Failed to allocate memory.\n");
-        exit(0);
+        free_memory(&gource_settings,true);
     }
     return FALSE;
 }
@@ -111,9 +103,7 @@ gboolean set_font_size(GtkWidget *widget, gpointer data){
 gboolean set_duration(GtkWidget *widget, gpointer data){
     copy_number_to_string(&gource_settings.subtitle.duration,gtk_spin_button_get_value(GTK_SPIN_BUTTON(widget)));
     if(gource_settings.subtitle.duration.size==0){
-        free_memory(&gource_settings);
-        fprintf(stderr, "Failed to allocate memory.\n");
-        exit(0);
+        free_memory(&gource_settings,true);
     }
     return FALSE;
 }
@@ -123,9 +113,7 @@ void set_subtitle_color(GtkWidget *widget, gpointer data){
     gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(widget),&rgba);
     copy_string(&gource_settings.subtitle.color,rgba_to_hex(rgba.red,rgba.green,rgba.blue));
     if(gource_settings.subtitle.color.size==0){
-        free_memory(&gource_settings);
-        fprintf(stderr, "Failed to allocate memory.\n");
-        exit(0);
+        free_memory(&gource_settings,true);
     }
 }
 
@@ -134,9 +122,7 @@ void set_subtitle_color(GtkWidget *widget, gpointer data){
 gboolean set_auto_skip(GtkWidget *widget, gpointer data){
     copy_number_to_string(&gource_settings.other.auto_skip_seconds,gtk_spin_button_get_value(GTK_SPIN_BUTTON(widget)));
     if(gource_settings.other.auto_skip_seconds.size==0){
-        free_memory(&gource_settings);
-        fprintf(stderr, "Failed to allocate memory.\n");
-        exit(0);
+        free_memory(&gource_settings,true);
     }
     return FALSE;
 }
@@ -144,9 +130,7 @@ gboolean set_auto_skip(GtkWidget *widget, gpointer data){
 gboolean set_seconds_per_day(GtkWidget *widget, gpointer data){
     copy_number_to_string(&gource_settings.other.seconds_per_day,gtk_spin_button_get_value(GTK_SPIN_BUTTON(widget)));
     if(gource_settings.other.seconds_per_day.size==0){
-        free_memory(&gource_settings);
-        fprintf(stderr, "Failed to allocate memory.\n");
-        exit(0);
+        free_memory(&gource_settings,true);
     }
     return FALSE;
 }
@@ -154,9 +138,7 @@ gboolean set_seconds_per_day(GtkWidget *widget, gpointer data){
 gboolean set_date_format(GtkWidget *widget, gpointer data){
     copy_string(&gource_settings.other.date_format,gtk_entry_get_text (GTK_ENTRY(widget)));
     if(gource_settings.other.date_format.size==0){
-        free_memory(&gource_settings);
-        fprintf(stderr, "Failed to allocate memory.\n");
-        exit(0);
+        free_memory(&gource_settings,true);
     }
     return FALSE;
 }
@@ -169,9 +151,7 @@ void set_output_gource(GtkWidget *widget){
     if(append_extension_when_necessary(widget)){
         gource_settings.other.output_gorce=gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(widget));
     }else{
-        free_memory(&gource_settings);
-        fprintf(stderr, "Failed to allocate memory.\n");
-        exit(0);
+        free_memory(&gource_settings,true);
     }
 }
 
@@ -319,7 +299,11 @@ void copy_number_to_string(_string *string, int value){
 }
 
 
-void free_memory(_gource *gource){
+void free_memory(_gource *gource, bool is_erro){
+    if(is_erro==true){
+        fprintf(stderr, "Failed to allocate memory.\n");
+        exit(0);
+    }
 
     //Free video
     if(gource->video.log_file!=NULL){

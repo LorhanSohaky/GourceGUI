@@ -28,7 +28,6 @@ void init__video(_gource *gource){
 
 void init__subtitle(_gource *gource){
     gource->subtitle.subtitle_file=NULL;
-    gource->subtitle.font_name=NULL;
     init__string(&gource->subtitle.font_size, "0");
     init__string(&gource->subtitle.duration,DEFAULT_SUBTITLE_DURATION);
     init__string(&gource->subtitle.color, DEFAULT_SUBTITLE_COLOR);
@@ -72,7 +71,6 @@ void print_gource(_gource *gource){
 
     printf("Subtitle:\n");
     printf("\tSubtitle file - %s\n", gource->subtitle.subtitle_file);
-    printf("\tFont name - %s\n", gource->subtitle.font_name);
     printf("\tFont size - %s\n", gource->subtitle.font_size.value);
     printf("\tDuration - %s\n", gource->subtitle.duration.value);
     printf("\tColor - %s\n", gource->subtitle.color.value);

@@ -20,11 +20,11 @@ GtkWidget *init_subtitle_page(GtkWidget *window){
     g_signal_connect (widget, "file-set", G_CALLBACK (set_subtitle_file),NULL);
     gtk_grid_attach(GTK_GRID(grid),widget,1,0,1,1);
 
-    widget=gtk_label_new("Font: ");
+    widget=gtk_label_new("Font size: ");
     gtk_grid_attach(GTK_GRID(grid),widget,0,1,1,1);
 
-    widget=gtk_font_button_new_with_font(" ");
-    g_signal_connect (widget, "font-set", G_CALLBACK (set_font),NULL);
+    widget=gtk_spin_button_new_with_range(0,100,1);
+    g_signal_connect (widget, "focus-out-event", G_CALLBACK (set_font_size),NULL);
     gtk_grid_attach(GTK_GRID(grid),widget,1,1,1,1);
 
     widget=gtk_label_new("Duration: ");

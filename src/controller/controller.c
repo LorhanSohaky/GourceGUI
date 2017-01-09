@@ -11,10 +11,6 @@ _gource gource_settings;
 
 #define ARGS_TO_OUTPUT_GOURCE 25
 
-void set_font_name(GtkFontChooser *button);
-void set_font_size(GtkFontChooser *button);
-void remove_size_of_font_name(char *font_name);
-
 bool append_extension_when_necessary(GtkWidget *widget);
 void string_tolower(char *string);
 
@@ -102,9 +98,14 @@ void set_subtitle_file(GtkWidget *widget, gpointer data){
     gource_settings.subtitle.subtitle_file=gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(widget));
 }
 
-void set_font(GtkWidget *widget, gpointer data){
-    set_font_name(GTK_FONT_CHOOSER(widget));
-    set_font_size(GTK_FONT_CHOOSER(widget));
+gboolean set_font_size(GtkWidget *widget, gpointer data){
+    copy_number_to_string(&gource_settings.subtitle.font_size,gtk_spin_button_get_value(GTK_SPIN_BUTTON(widget)));
+    if(gource_settings.subtitle.font_size.size==0){
+        free_memory(&gource_settings);
+        fprintf(stderr, "Failed to allocate memory.\n");
+        exit(0);
+    }
+    return FALSE;
 }
 
 gboolean set_duration(GtkWidget *widget, gpointer data){
@@ -172,22 +173,6 @@ void set_output_gource(GtkWidget *widget){
         fprintf(stderr, "Failed to allocate memory.\n");
         exit(0);
     }
-}
-
-
-
-void set_font_name(GtkFontChooser *button){
-    gource_settings.subtitle.font_name=gtk_font_chooser_get_font(button);
-    remove_size_of_font_name(gource_settings.subtitle.font_name);
-}
-
-void set_font_size(GtkFontChooser *button){
-    copy_number_to_string(&gource_settings.subtitle.font_size,gtk_font_chooser_get_font_size(button)/1000);
-}
-
-void remove_size_of_font_name(char *font_name){
-    char *last_space=strrchr(font_name,' ');
-    font_name[last_space-font_name]='\0';
 }
 
 

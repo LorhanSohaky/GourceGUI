@@ -12,7 +12,7 @@ void set_background_color(GtkWidget *widget, gpointer data);
 void set_camera_mode(GtkWidget *widget, gpointer data);
 
 void set_subtitle_file(GtkWidget *widget, gpointer data);
-void set_font(GtkWidget *widget, gpointer data);
+gboolean set_font_size(GtkWidget *widget, gpointer data);
 gboolean set_duration(GtkWidget *widget, gpointer data);
 void set_subtitle_color(GtkWidget *widget, gpointer data);
 

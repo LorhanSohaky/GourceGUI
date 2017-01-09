@@ -24,7 +24,6 @@ typedef struct{
 
 typedef struct{
     char *subtitle_file;
-    char *font_name;
     _string font_size;
     _string duration;
     _string color;

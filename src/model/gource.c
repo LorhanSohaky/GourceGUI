@@ -19,7 +19,7 @@ void init__gource(_gource *gource){
 }
 
 void init__video(_gource *gource){
-    gource->video.log_file=NULL;
+    gource->video.repository=NULL;
     init__string(&gource->video.title, " ");
     gource->video.screen_mode=NULL;
     init__string(&gource->video.background_color, DEFAULT_BACKGROUND_COLOR);
@@ -63,7 +63,7 @@ bool is_malloc_OK(_gource *gource){
 
 void print_gource(_gource *gource){
     printf("Video:\n");
-    printf("\tLog file - %s\n", gource->video.log_file);
+    printf("\tRepository - %s\n", gource->video.repository);
     printf("\tTitle - %s\n", gource->video.title.value);
     printf("\tScreen Mode - %s\n", gource->video.screen_mode);
     printf("\tBackground color - %s\n", gource->video.background_color.value);

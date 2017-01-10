@@ -10,11 +10,11 @@ GtkWidget *init_video_page(GtkWidget *window){
     gtk_grid_set_row_homogeneous (GTK_GRID(grid),TRUE);
     gtk_container_set_border_width(GTK_CONTAINER(grid),10);
 
-    widget=gtk_label_new("LOG file: ");
+    widget=gtk_label_new("Folder of repository: ");
     gtk_grid_attach(GTK_GRID(grid),widget,0,0,1,1);
 
-    widget=gtk_file_chooser_button_new ("Choose a LOG file",GTK_FILE_CHOOSER_ACTION_OPEN);
-    g_signal_connect (widget, "file-set", G_CALLBACK (set_log_file),NULL);
+    widget=gtk_file_chooser_button_new("Select the folder of the repository",GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
+    g_signal_connect (widget, "file-set", G_CALLBACK (set_repository),NULL);
     gtk_grid_attach(GTK_GRID(grid),widget,1,0,1,1);
 
     widget=gtk_label_new("Title: ");

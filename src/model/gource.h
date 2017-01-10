@@ -15,7 +15,7 @@ typedef struct{
 }_string;
 
 typedef struct{
-    char *log_file;
+    char *repository;
     _string title;
     char *screen_mode;
     _string background_color;

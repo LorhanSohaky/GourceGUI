@@ -57,8 +57,8 @@ void execute(GtkWidget *widget, gpointer data){
 
 //CALLBACKs of video_page
 
-void set_log_file(GtkWidget *widget, gpointer data){
-    gource_settings.video.log_file=gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(widget));
+void set_repository(GtkWidget *widget, gpointer data){
+    gource_settings.video.repository=gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(widget));
 }
 
 gboolean set_title(GtkWidget *widget, gpointer data){
@@ -183,8 +183,8 @@ void add_to_argv_valid_field(_gource *gource,char **argv,int *size){
     char *tmp;
     prepare_color(gource->video.background_color.value);
     prepare_color(gource->subtitle.color.value);
-    if(gource->video.log_file!=NULL){
-        add_to_argv(argv,size,NULL,gource->video.log_file);
+    if(gource->video.repository!=NULL){
+        add_to_argv(argv,size,NULL,gource->video.repository);
     }
 
     if(strcmp(gource->video.title.value, " ")!=0){// space=default value
@@ -306,8 +306,8 @@ void free_memory(_gource *gource, bool is_erro){
     }
 
     //Free video
-    if(gource->video.log_file!=NULL){
-        g_free(gource->video.log_file);
+    if(gource->video.repository!=NULL){
+        g_free(gource->video.repository);
     }
 
     if(gource->video.title.value!=NULL){

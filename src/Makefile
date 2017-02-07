@@ -20,7 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-all:Main clean
+program=gourceGui.exe
+
+all:Main clean run
 
 Main:main.o main_menu.o controller.o video_page.o subtitle_page.o other_page.o utils.o gource.o process_creator.o
 	gcc -Wall -o gourceGui.exe main.o main_menu.o controller.o video_page.o subtitle_page.o other_page.o utils.o gource.o process_creator.o `pkg-config --cflags --libs gtk+-3.0`
@@ -54,3 +56,6 @@ process_creator.o:./model/process_creator.c ./model/process_creator.h
 
 clean:
 	rm -rf *.o
+
+run:
+	./$(program)

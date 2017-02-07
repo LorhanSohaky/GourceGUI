@@ -18,50 +18,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef GOURCE_H
-#define GOURCE_H
+#ifndef UTILS_H
+#define UTILS_H
 
-#include <dstring.h>
-#include <stdbool.h>
+char *rgba_to_hex( double red, double green, double blue );
 
-static const char *DEFAULT_SUBTITLE_DURATION = "3"; // I tested, so 3 it's a good number (LOL)
-static const char *DEFAULT_BACKGROUND_COLOR = "#555555";
-static const char *DEFAULT_SUBTITLE_COLOR = "#FFD700";
-
-#define NUMBER_OF_FIELDS 15
-
-typedef struct {
-    char *repository;
-    String *title;
-    char *screen_mode;
-    String *background_color;
-    char *camera_mode;
-} _video;
-
-typedef struct {
-    char *subtitle_file;
-    String *font_size;
-    String *duration;
-    String *color;
-} _subtitle;
-
-typedef struct {
-    String *auto_skip_seconds;
-    String *seconds_per_day;
-    String *date_format;
-    char *folder_with_users_avatar_icon;
-    char *output_gorce;
-} _other;
-
-typedef struct {
-    _video video;
-    _subtitle subtitle;
-    _other other;
-} _gource;
-
-void init__gource( _gource *gource );
-void print_gource( _gource *gource );
-
-bool is__gource_OK( _gource *gource );
+int length_of_int( int value );
 
 #endif

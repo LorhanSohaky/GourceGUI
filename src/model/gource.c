@@ -82,7 +82,7 @@ static int is_other_ok( Other *other ) {
         other->folder_with_users_avatar_icon && other->output_gorce;
 }
 
-void printGource( Gource *gource ) {
+void print_gource( Gource *gource ) {
     printf( "Video:\n" );
     printf( "\tRepository - %s\n", string_get_text( gource->video.repository ) );
     printf( "\tTitle - %s\n", string_get_text( gource->video.title ) );

@@ -27,24 +27,24 @@ SOFTWARE.
 // I tested these value, so are good numbers for me (LOL)
 
 // DEFAULT VALUES FOR VIDEO
-static const char *DEFAULT_REPOSITORY = NULL;
-static const char *DEFAULT_TITLE = NULL;
-static const char *DEFAULT_SCREEN_MODE = " ";
-static const char *DEFAULT_BACKGROUND_COLOR = "#555555";
-static const char *DEFAULT_CAMERA_MODE = " ";
+#define DEFAULT_REPOSITORY ""
+#define DEFAULT_TITLE ""
+#define DEFAULT_SCREEN_MODE " "
+#define DEFAULT_BACKGROUND_COLOR "#555555"
+#define DEFAULT_CAMERA_MODE " "
 
 // DEFAULT VALUES FOR CAPTION
-static const char *DEFAULT_CAPTION_FILE = NULL;
-static const char *DEFAULT_CAPTION_FONT_SIZE = "20";
-static const char *DEFAULT_CAPTION_DURATION = "3";
-static const char *DEFAULT_CAPTION_COLOR = "#FFD700";
+#define DEFAULT_CAPTION_FILE ""
+#define DEFAULT_CAPTION_FONT_SIZE "20"
+#define DEFAULT_CAPTION_DURATION "3"
+#define DEFAULT_CAPTION_COLOR "#FFD700"
 
 // DEFAULT VALUES FOR OTHER
-static const char *DEFAULT_AUTO_SKIP_SECONDS = "3";
-static const char *DEFAULT_SECONDS_PER_DAY = "2";
-static const char *DEFAULT_DATE_FORMAT = "%d/%m/%y  %H:%M:%S";
-static const char *DEFAULT_FOLDER_WITH_USERS_AVATAR_ICON = NULL;
-static const char *DEFAULT_OUTPUT_GOURCE = NULL;
+#define DEFAULT_AUTO_SKIP_SECONDS "3"
+#define DEFAULT_SECONDS_PER_DAY "2"
+#define DEFAULT_DATE_FORMAT "%d/%m/%y  %H:%M:%S"
+#define DEFAULT_FOLDER_WITH_USERS_AVATAR_ICON ""
+#define DEFAULT_OUTPUT_GOURCE ""
 
 #define NUMBER_OF_FIELDS 15
 

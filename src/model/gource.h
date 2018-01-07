@@ -24,9 +24,27 @@ SOFTWARE.
 #include <dstring.h>
 #include <stdbool.h>
 
-static const char *DEFAULT_SUBTITLE_DURATION = "3"; // I tested, so 3 it's a good number (LOL)
+// I tested these value, so are good numbers for me (LOL)
+
+// DEFAULT VALUES FOR VIDEO
+static const char *DEFAULT_REPOSITORY = NULL;
+static const char *DEFAULT_TITLE = NULL;
+static const char *DEFAULT_SCREEN_MODE = " ";
 static const char *DEFAULT_BACKGROUND_COLOR = "#555555";
-static const char *DEFAULT_SUBTITLE_COLOR = "#FFD700";
+static const char *DEFAULT_CAMERA_MODE = " ";
+
+// DEFAULT VALUES FOR CAPTION
+static const char *DEFAULT_CAPTION_FILE = NULL;
+static const char *DEFAULT_CAPTION_FONT_SIZE = "20";
+static const char *DEFAULT_CAPTION_DURATION = "3";
+static const char *DEFAULT_CAPTION_COLOR = "#FFD700";
+
+// DEFAULT VALUES FOR OTHER
+static const char *DEFAULT_AUTO_SKIP_SECONDS = "3";
+static const char *DEFAULT_SECONDS_PER_DAY = "2";
+static const char *DEFAULT_DATE_FORMAT = "%d/%m/%y  %H:%M:%S";
+static const char *DEFAULT_FOLDER_WITH_USERS_AVATAR_ICON = NULL;
+static const char *DEFAULT_OUTPUT_GOURCE = NULL;
 
 #define NUMBER_OF_FIELDS 15
 
@@ -36,14 +54,14 @@ typedef struct {
     char *screen_mode;
     String *background_color;
     char *camera_mode;
-} _video;
+} Video;
 
 typedef struct {
-    char *subtitle_file;
+    char *file;
     String *font_size;
     String *duration;
     String *color;
-} _subtitle;
+} Caption;
 
 typedef struct {
     String *auto_skip_seconds;
@@ -51,17 +69,17 @@ typedef struct {
     String *date_format;
     char *folder_with_users_avatar_icon;
     char *output_gorce;
-} _other;
+} Other;
 
 typedef struct {
-    _video video;
-    _subtitle subtitle;
-    _other other;
-} _gource;
+    Video video;
+    Subtitle subtitle;
+    Other other;
+} Gource;
 
-void init__gource( _gource *gource );
-void print_gource( _gource *gource );
+void init_gource_with_default_values( Gource *gource );
+void print_gource( Gource *gource );
 
-bool is__gource_OK( _gource *gource );
+bool is_gource_ok( Gource *gource );
 
 #endif

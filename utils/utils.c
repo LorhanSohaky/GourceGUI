@@ -18,8 +18,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "utils.h"
 #include <stdio.h>
-#include <utils.h>
 
 char *rgba_to_hex( double red, double green, double blue ) {
     static char hex[8];

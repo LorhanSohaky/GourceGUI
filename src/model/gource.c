@@ -19,67 +19,47 @@ SOFTWARE.
 */
 
 #include "gource.h"
-#include "utils.h"
+#include "dstring.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-#define STRING_DEFAULT_LENGTH 7 // 6 + 1 for put '\0'
+static void init_video_with_default_values( Gource *gource );
+static void init_caption_with_default_values( Gource *gource );
+static void init_other_with_default_values( Gource *gource );
 
-void init__video( _gource *gource );
-void init__subtitle( _gource *gource );
-void init__other( _gource *gource );
+void init_string( String **destination, const char *initial_value );
+bool is_malloc_OK( Gource *gource );
 
-void init__string( String **destination, const char *initial_value );
-bool is_malloc_OK( _gource *gource );
-
-void init__gource( _gource *gource ) {
-    init__video( gource );
-    init__subtitle( gource );
-    init__other( gource );
+void init_gource_with_default_values( Gource *gource ) {
+    init_video_with_default_values( gource );
+    init_caption_with_default_values( gource );
+    init_other_with_default_values( gource );
 }
 
-void init__video( _gource *gource ) {
-    gource->video.repository = NULL;
-    init__string( &gource->video.title, " " );
-    gource->video.screen_mode = NULL;
-    init__string( &gource->video.background_color, DEFAULT_BACKGROUND_COLOR );
-    gource->video.camera_mode = NULL;
+void init_video_with_default_values( Gource *gource ) {
+    gource->video.repository = DEFAULT_REPOSITORY;
+    gource->video.title = DEFAULT_TITLE;
+    gource->video.screen_mode = DEFAULT_SCREEN_MODE;
+    gource->video.background_color = DEFAULT_BACKGROUND_COLOR;
+    gource->video.camera_mode = DEFAULT_CAMERA_MODE;
 }
 
-void init__subtitle( _gource *gource ) {
-    gource->subtitle.subtitle_file = NULL;
-    init__string( &gource->subtitle.font_size, "0" );
-    init__string( &gource->subtitle.duration, DEFAULT_SUBTITLE_DURATION );
-    init__string( &gource->subtitle.color, DEFAULT_SUBTITLE_COLOR );
+void init_caption_with_default_values( Gource *gource ) {
+    gource->caption.file = DEFAULT_CAPTION_FILE;
+    gource->caption.font_size = DEFAULT_CAPTION_FONT_SIZE;
+    gource->caption.duration = DEFAULT_SUBTITLE_DURATION;
+    gource->caption.color = DEFAULT_SUBTITLE_COLOR;
 }
 
-void init__other( _gource *gource ) {
-    init__string( &gource->other.auto_skip_seconds, "0" );
-    init__string( &gource->other.seconds_per_day, "0" );
-    init__string( &gource->other.date_format, " " );
-    gource->other.folder_with_users_avatar_icon = NULL;
-    gource->other.output_gorce = NULL;
+void init_other_with_default_values( Gource *gource ) {
+    gource->other.auto_skip_seconds = DEFAULT_AUTO_SKIP_SECONDS;
+    gource->other.seconds_per_day = DEFAULT_SECONDS_PER_DAY;
+    gource->other.date_format = DEFAULT_DATE_FORMAT;
+    gource->other.folder_with_users_avatar_icon = DEFAULT_FOLDER_WITH_USERS_AVATAR_ICON;
+    gource->other.output_gorce = DEFAULT_OUTPUT_GOURCE;
 }
 
-void init__string( String **destination, const char *initial_value ) {
-    *destination = string_new_with_text( initial_value );
-}
-
-bool is__gource_OK( _gource *gource ) {
-    return is_malloc_OK( gource );
-}
-
-bool is_malloc_OK( _gource *gource ) {
-    if( !gource->video.title || !gource->other.date_format || !gource->video.background_color ||
-        !gource->subtitle.color || !gource->subtitle.font_size || !gource->subtitle.duration ||
-        !gource->other.auto_skip_seconds || !gource->other.seconds_per_day ) {
-        return false;
-    } else {
-        return true;
-    }
-}
-
-void print_gource( _gource *gource ) {
+void printGource( Gource *gource ) {
     printf( "Video:\n" );
     printf( "\tRepository - %s\n", gource->video.repository );
     printf( "\tTitle - %s\n", string_get_text( gource->video.title ) );

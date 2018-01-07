@@ -20,45 +20,35 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-program=gourceGui.exe
+FLAGS = -Wall -I./view -I./controller -I./model -I../utils -I../utils/String/src `pkg-config --cflags --libs gtk+-3.0` -o
 
-all:subsystem Main clean run
+OBJS = ../obj/main.o ../obj/controller.o ../obj/dstring.o ../obj/gource.o ../obj/main_menu.o ../obj/other_page.o ../obj/process_creator.o ../obj/subtitle_page.o ../obj/utils.o ../obj/video_page.o
 
-subsystem:
-	cd utils/String/src && $(MAKE)
+all: Main
 
-Main:main.o main_menu.o controller.o video_page.o subtitle_page.o other_page.o utils.o gource.o process_creator.o utils/String/src/dstring.o
-	gcc -Wall -o gourceGui.exe main.o main_menu.o controller.o video_page.o subtitle_page.o other_page.o utils.o gource.o process_creator.o utils/String/src/dstring.o `pkg-config --cflags --libs gtk+-3.0`
+Main: Process_creator Gource Other_page Subtitle_page Video_page Main_menu Controller main
+	gcc $(OBJS) $(FLAGS) ../bin/gourceGui.exe
 
-main.o:main.c ./view/main_menu.h ./controller/controller.h ./model/gource.h
-	gcc -c main.c -I./view/ -I./controller/ -I./model/ `pkg-config --cflags --libs gtk+-3.0`
+main:
+	gcc -c main.c $(FLAGS) ../obj/main.o
 
-controller.o:./controller/controller.c ./controller/controller.h ./view/main_menu.h ./model/gource.h ./utils/utils.h ./model/process_creator.h ./utils/String/src/dstring.h
-	gcc -c ./controller/controller.c -I./controller/ -I./view/ -I./model/ -I./utils/ -I./utils/String/src `pkg-config --cflags --libs gtk+-3.0`
+Controller:
+	gcc -c ./controller/controller.c $(FLAGS) ../obj/controller.o
 
-main_menu.o:./view/main_menu.c ./view/main_menu.h ./view/video_page.h ./controller/controller.h
-	gcc -c ./view/main_menu.c -I./view/ -I./view/ -I ./controller/ `pkg-config --cflags --libs gtk+-3.0`
+Main_menu:
+	gcc -c ./view/main_menu.c $(FLAGS) ../obj/main_menu.o
 
-video_page.o:./view/video_page.c ./view/video_page.h ./controller/controller.h ./model/gource.h ./utils/String/src/dstring.h
-	gcc -c ./view/video_page.c -I./view/ -I./controller/ -I./model/ -I./utils/String/src/ `pkg-config --cflags --libs gtk+-3.0`
+Video_page:
+	gcc -c ./view/video_page.c $(FLAGS) ../obj/video_page.o
 
-subtitle_page.o:./view/subtitle_page.c ./view/subtitle_page.h ./controller/controller.h ./model/gource.h ./utils/String/src/dstring.h
-	gcc -c ./view/subtitle_page.c -I./view/ -I ./controller/ -I./model/ -I./utils/String/src `pkg-config --cflags --libs gtk+-3.0`
+Subtitle_page:
+	gcc -c ./view/subtitle_page.c $(FLAGS) ../obj/subtitle_page.o
 
-other_page.o:./view/other_page.c ./view/other_page.h ./controller/controller.h ./model/gource.h
-	gcc -c ./view/other_page.c -I./view/ -I ./controller/ -I./model/ `pkg-config --cflags --libs gtk+-3.0`
+Other_page:
+	gcc -c ./view/other_page.c $(FLAGS) ../obj/other_page.o
 
-utils.o:./utils/utils.c ./utils/utils.h ./model/gource.h
-	gcc -c ./utils/utils.c -I./utils -I./model
+Gource:
+	gcc -c ./model/gource.c $(FLAGS) ../obj/gource.o
 
-gource.o:./model/gource.c ./model/gource.h ./utils/utils.h ./utils/String/src/dstring.h
-	gcc -c ./model/gource.c -I./model -I./utils -I./utils/String/src
-
-process_creator.o:./model/process_creator.c ./model/process_creator.h ./utils/utils.h
-	gcc -c ./model/process_creator.c -I./model -I./utils
-
-clean:
-	rm -rf *.o
-
-run:
-	./$(program)
+Process_creator:
+	gcc -c ./model/process_creator.c $(FLAGS) ../obj/process_creator.o

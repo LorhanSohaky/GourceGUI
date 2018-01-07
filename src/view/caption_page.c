@@ -18,12 +18,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "subtitle_page.h"
+#include "caption_page.h"
 #include "controller.h"
 #include "gource.h"
 #include <stdlib.h>
 
-GtkWidget *init_subtitle_page( GtkWidget *window ) {
+GtkWidget *init_caption_page( GtkWidget *window ) {
     GtkWidget *grid, *widget;
     GdkRGBA rgba;
     grid = gtk_grid_new();
@@ -31,10 +31,10 @@ GtkWidget *init_subtitle_page( GtkWidget *window ) {
     gtk_grid_set_row_homogeneous( GTK_GRID( grid ), TRUE );
     gtk_container_set_border_width( GTK_CONTAINER( grid ), 10 );
 
-    widget = gtk_label_new( "Subtitle file: " );
+    widget = gtk_label_new( "Caption file: " );
     gtk_grid_attach( GTK_GRID( grid ), widget, 0, 0, 1, 1 );
 
-    widget = gtk_file_chooser_button_new( "Choose a file for the subtitle",
+    widget = gtk_file_chooser_button_new( "Choose a file for the caption",
                                           GTK_FILE_CHOOSER_ACTION_OPEN );
     g_signal_connect( widget, "file-set", G_CALLBACK( set_subtitle_file ), NULL );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 0, 1, 1 );
@@ -59,7 +59,7 @@ GtkWidget *init_subtitle_page( GtkWidget *window ) {
 
     gdk_rgba_parse( &rgba, DEFAULT_CAPTION_COLOR );
     widget = gtk_color_button_new_with_rgba( &rgba );
-    gtk_color_button_set_title( GTK_COLOR_BUTTON( widget ), "Choose a color for the subtitle" );
+    gtk_color_button_set_title( GTK_COLOR_BUTTON( widget ), "Choose a color for the caption" );
     g_signal_connect( widget, "color-set", G_CALLBACK( set_subtitle_color ), NULL );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 3, 1, 1 );
 

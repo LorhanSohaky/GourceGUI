@@ -1,3 +1,7 @@
+objects: utils
+	@cd src && make
+	@cd ..
+
 utils: otherMake
 	@cd utils && make
 	@cd ..

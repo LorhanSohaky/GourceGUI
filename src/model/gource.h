@@ -24,7 +24,7 @@ SOFTWARE.
 #include "dstring.h"
 #include <stdlib.h>
 
-// I tested these value, so are good numbers for me (LOL)
+// I tested these values, so are good numbers for me (LOL)
 
 // DEFAULT VALUES FOR VIDEO
 #define DEFAULT_REPOSITORY ""

@@ -19,7 +19,9 @@ SOFTWARE.
 */
 
 #include "utils.h"
+#include <ctype.h>
 #include <stdio.h>
+#include <string.h>
 
 char *rgba_to_hex( double red, double green, double blue ) {
     static char hex[8];
@@ -38,4 +40,10 @@ int length_of_int( int value ) {
         length++;
     }
     return length;
+}
+
+void string_tolower( char *string ) {
+    for( int i = 0; i < strlen( string ); i++ ) {
+        string[i] = tolower( string[i] );
+    }
 }

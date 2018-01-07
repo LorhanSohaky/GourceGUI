@@ -19,11 +19,10 @@ SOFTWARE.
 */
 
 #include "caption_page.h"
-#include "controller.h"
-#include "gource.h"
+#include "call_backs_caption_page.h"
 #include <stdlib.h>
 
-GtkWidget *init_caption_page( GtkWidget *window ) {
+GtkWidget *init_caption_page( GtkWidget *window, Gource *gource ) {
     GtkWidget *grid, *widget;
     GdkRGBA rgba;
     grid = gtk_grid_new();
@@ -36,14 +35,14 @@ GtkWidget *init_caption_page( GtkWidget *window ) {
 
     widget = gtk_file_chooser_button_new( "Choose a file for the caption",
                                           GTK_FILE_CHOOSER_ACTION_OPEN );
-    g_signal_connect( widget, "file-set", G_CALLBACK( set_caption_file ), NULL );
+    g_signal_connect( widget, "file-set", G_CALLBACK( set_caption_file ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 0, 1, 1 );
 
     widget = gtk_label_new( "Font size: " );
     gtk_grid_attach( GTK_GRID( grid ), widget, 0, 1, 1, 1 );
 
     widget = gtk_spin_button_new_with_range( 0, 100, 1 );
-    g_signal_connect( widget, "focus-out-event", G_CALLBACK( set_font_size ), NULL );
+    g_signal_connect( widget, "focus-out-event", G_CALLBACK( set_font_size ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 1, 1, 1 );
 
     widget = gtk_label_new( "Duration: " );
@@ -51,7 +50,7 @@ GtkWidget *init_caption_page( GtkWidget *window ) {
 
     widget = gtk_spin_button_new_with_range( 0, 100, 1 );
     gtk_spin_button_set_value( GTK_SPIN_BUTTON( widget ), atoi( DEFAULT_CAPTION_DURATION ) );
-    g_signal_connect( widget, "focus-out-event", G_CALLBACK( set_duration ), NULL );
+    g_signal_connect( widget, "focus-out-event", G_CALLBACK( set_duration ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 2, 1, 1 );
 
     widget = gtk_label_new( "Color: " );
@@ -60,7 +59,7 @@ GtkWidget *init_caption_page( GtkWidget *window ) {
     gdk_rgba_parse( &rgba, DEFAULT_CAPTION_COLOR );
     widget = gtk_color_button_new_with_rgba( &rgba );
     gtk_color_button_set_title( GTK_COLOR_BUTTON( widget ), "Choose a color for the caption" );
-    g_signal_connect( widget, "color-set", G_CALLBACK( set_caption_color ), NULL );
+    g_signal_connect( widget, "color-set", G_CALLBACK( set_caption_color ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 3, 1, 1 );
 
     return grid;

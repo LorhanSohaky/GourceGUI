@@ -29,16 +29,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-bool append_extension_when_necessary( GtkWidget *widget );
-void string_tolower( char *string );
-
 void add_to_argv_valid_field( Gource *gource, char **argv, int *size );
 void add_to_argv( char **argv, int *size, char *option, String *value );
 
 void prepare_color( String *color );
 void prepare_screen_mode( String *screen_mode );
-
-bool copy_number_to_string( String *string, int value );
 
 static void free_gource( Gource *gource );
 static void free_video( Video *video );
@@ -52,7 +47,7 @@ int controller( int argc, char *argv[] ) {
 
     if( is_gource_ok( &gource_settings ) ) {
         GtkApplication *app = gtk_application_new( "org.gourcegui", G_APPLICATION_FLAGS_NONE );
-        g_signal_connect( app, "activate", G_CALLBACK( activate ), NULL );
+        g_signal_connect( app, "activate", G_CALLBACK( activate ), &gource_settings );
         status = g_application_run( G_APPLICATION( app ), argc, argv );
         g_object_unref( app );
         free_gource( &gource_settings );
@@ -61,33 +56,6 @@ int controller( int argc, char *argv[] ) {
         free_gource( &gource_settings );
     }
     return status;
-}
-
-bool append_extension_when_necessary( GtkWidget *widget ) {
-    char *tmp = gtk_file_chooser_get_current_name( GTK_FILE_CHOOSER( widget ) );
-    tmp = &tmp[strlen( tmp ) - strlen( ".MP4" )];
-    string_tolower( tmp );
-    if( strcmp( tmp, ".mp4" ) != 0 ) {
-        tmp = (char *)malloc(
-            sizeof( char ) *
-            ( strlen( gtk_file_chooser_get_current_name( GTK_FILE_CHOOSER( widget ) ) ) +
-              strlen( ".mp4" ) ) );
-        if( tmp != NULL ) {
-            sprintf(
-                tmp, "%s.mp4", gtk_file_chooser_get_current_name( GTK_FILE_CHOOSER( widget ) ) );
-            gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER( widget ), tmp );
-            free( tmp );
-        } else {
-            return false;
-        }
-    }
-    return true;
-}
-
-void string_tolower( char *string ) {
-    for( int i = 0; i < strlen( string ); i++ ) {
-        string[i] = tolower( string[i] );
-    }
 }
 
 void add_to_argv_valid_field( Gource *gource, char **argv, int *size ) {
@@ -187,10 +155,6 @@ void prepare_color( String *color ) { // Remove # from string
 
 void prepare_screen_mode( String *screen_mode ) {
     string_sprint( screen_mode, "-%s", string_get_text( screen_mode ) );
-}
-
-bool copy_number_to_string( String *string, int value ) {
-    return string_sprint( string, "%d", value ); // 10= decimal
 }
 
 void static free_gource( Gource *gource ) {

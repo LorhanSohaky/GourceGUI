@@ -25,4 +25,6 @@ char *rgba_to_hex( double red, double green, double blue );
 
 int length_of_int( int value );
 
+void string_tolower( char *string );
+
 #endif

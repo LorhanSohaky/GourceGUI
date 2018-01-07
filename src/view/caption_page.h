@@ -18,6 +18,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "gource.h"
 #include <gtk/gtk.h>
 
-GtkWidget *init_caption_page( GtkWidget *window );
+GtkWidget *init_caption_page( GtkWidget *window, Gource *gource );

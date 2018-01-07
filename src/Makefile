@@ -27,7 +27,7 @@ all: main Main
 Main:
 	gcc ../obj/*.o $(FLAGS) ../bin/gourceGui.exe
 
-main: Process_creator Gource Other_page Subtitle_page Video_page Main_menu Controller Call_backs_video_page
+main: Process_creator Gource Call_backs_video_page Video_page Call_backs_other_page Other_page Call_backs_caption_page Caption_page Call_backs_main_menu Main_menu Controller
 	gcc -c main.c $(FLAGS) ../obj/main.o
 
 Controller:
@@ -39,8 +39,8 @@ Main_menu:
 Video_page:
 	gcc -c ./view/video_page.c $(FLAGS) ../obj/video_page.o
 
-Subtitle_page:
-	gcc -c ./view/subtitle_page.c $(FLAGS) ../obj/subtitle_page.o
+Caption_page:
+	gcc -c ./view/caption_page.c $(FLAGS) ../obj/caption_page.o
 
 Other_page:
 	gcc -c ./view/other_page.c $(FLAGS) ../obj/other_page.o
@@ -51,5 +51,14 @@ Gource:
 Process_creator:
 	gcc -c ./model/process_creator.c $(FLAGS) ../obj/process_creator.o
 
+Call_backs_main_menu:
+	gcc -c ./controller/call_backs_main_menu.c $(FLAGS) ../obj/call_backs_main_menu.o
+
 Call_backs_video_page:
 	gcc -c ./controller/call_backs_video_page.c $(FLAGS) ../obj/call_backs_video_page.o
+
+Call_backs_caption_page:
+	gcc -c ./controller/call_backs_caption_page.c $(FLAGS) ../obj/call_backs_caption_page.o
+
+Call_backs_other_page:
+	gcc -c ./controller/call_backs_other_page.c $(FLAGS) ../obj/call_backs_other_page.o

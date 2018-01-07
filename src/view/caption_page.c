@@ -36,7 +36,7 @@ GtkWidget *init_caption_page( GtkWidget *window ) {
 
     widget = gtk_file_chooser_button_new( "Choose a file for the caption",
                                           GTK_FILE_CHOOSER_ACTION_OPEN );
-    g_signal_connect( widget, "file-set", G_CALLBACK( set_subtitle_file ), NULL );
+    g_signal_connect( widget, "file-set", G_CALLBACK( set_caption_file ), NULL );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 0, 1, 1 );
 
     widget = gtk_label_new( "Font size: " );
@@ -60,7 +60,7 @@ GtkWidget *init_caption_page( GtkWidget *window ) {
     gdk_rgba_parse( &rgba, DEFAULT_CAPTION_COLOR );
     widget = gtk_color_button_new_with_rgba( &rgba );
     gtk_color_button_set_title( GTK_COLOR_BUTTON( widget ), "Choose a color for the caption" );
-    g_signal_connect( widget, "color-set", G_CALLBACK( set_subtitle_color ), NULL );
+    g_signal_connect( widget, "color-set", G_CALLBACK( set_caption_color ), NULL );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 3, 1, 1 );
 
     return grid;

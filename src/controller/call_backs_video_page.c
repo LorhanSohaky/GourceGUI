@@ -12,8 +12,8 @@ void set_repository( GtkWidget *widget, gpointer data ) {
 
 gboolean set_title( GtkWidget *widget, gpointer data ) {
     Gource *gource = (Gource *)data;
-    printf( "Entrou:%s\n", gtk_entry_get_text( GTK_ENTRY( widget ) ) );
     string_set_text( gource->video.title, gtk_entry_get_text( GTK_ENTRY( widget ) ) );
+
     return FALSE;
 }
 

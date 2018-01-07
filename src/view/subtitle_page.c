@@ -25,8 +25,6 @@ SOFTWARE.
 
 GtkWidget *init_subtitle_page( GtkWidget *window ) {
     GtkWidget *grid, *widget;
-    GtkListStore *liststore;
-    GtkCellRenderer *column;
     GdkRGBA rgba;
     grid = gtk_grid_new();
     gtk_grid_set_column_homogeneous( GTK_GRID( grid ), TRUE );

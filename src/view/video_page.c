@@ -19,7 +19,7 @@ SOFTWARE.
 */
 
 #include "video_page.h"
-#include "controller.h"
+#include "call_backs_video_page.h"
 #include "gource.h"
 
 GtkWidget *init_video_page( GtkWidget *window ) {

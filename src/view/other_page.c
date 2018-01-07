@@ -25,9 +25,6 @@ void save_dialog( GtkWidget *widget, gpointer data );
 
 GtkWidget *init_other_page( GtkWidget *window ) {
     GtkWidget *grid, *widget;
-    GtkListStore *liststore;
-    GtkCellRenderer *column;
-    GdkRGBA rgba;
     grid = gtk_grid_new();
     gtk_grid_set_column_homogeneous( GTK_GRID( grid ), TRUE );
     gtk_grid_set_row_homogeneous( GTK_GRID( grid ), TRUE );

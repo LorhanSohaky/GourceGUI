@@ -30,7 +30,6 @@ void add_notebook_tab( GtkWidget *notebook, char *label, GtkWidget *page );
 
 void activate( GtkApplication *app, gpointer user_data ) {
     GtkWidget *window, *grid, *button, *notebook;
-    GdkRGBA rgba;
     // window properties
     window = gtk_application_window_new( app );
     gtk_window_set_title( GTK_WINDOW( window ), "GourceGUI" );
@@ -61,7 +60,7 @@ void activate( GtkApplication *app, gpointer user_data ) {
 }
 
 GtkWidget *add_notebook( GtkWidget *window ) {
-    GtkWidget *label, *notebook, *page;
+    GtkWidget *notebook;
     notebook = gtk_notebook_new();
     gtk_notebook_set_tab_pos( GTK_NOTEBOOK( notebook ), GTK_POS_TOP );
     add_notebook_tab( notebook, "Video", init_video_page( window ) );

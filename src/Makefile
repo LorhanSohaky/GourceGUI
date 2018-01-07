@@ -22,14 +22,12 @@
 
 FLAGS = -Wall -I./view -I./controller -I./model -I../utils -I../utils/String/src `pkg-config --cflags --libs gtk+-3.0` -o
 
-OBJS = ../obj/main.o ../obj/controller.o ../obj/dstring.o ../obj/gource.o ../obj/main_menu.o ../obj/other_page.o ../obj/process_creator.o ../obj/subtitle_page.o ../obj/utils.o ../obj/video_page.o
+all: main Main
 
-all: Main
+Main:
+	gcc ../obj/*.o $(FLAGS) ../bin/gourceGui.exe
 
-Main: Process_creator Gource Other_page Subtitle_page Video_page Main_menu Controller main
-	gcc $(OBJS) $(FLAGS) ../bin/gourceGui.exe
-
-main:
+main: Process_creator Gource Other_page Subtitle_page Video_page Main_menu Controller Call_backs_video_page
 	gcc -c main.c $(FLAGS) ../obj/main.o
 
 Controller:
@@ -52,3 +50,6 @@ Gource:
 
 Process_creator:
 	gcc -c ./model/process_creator.c $(FLAGS) ../obj/process_creator.o
+
+Call_backs_video_page:
+	gcc -c ./controller/call_backs_video_page.c $(FLAGS) ../obj/call_backs_video_page.o

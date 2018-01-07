@@ -18,9 +18,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <controller.h>
-#include <gource.h>
-#include <video_page.h>
+#include "video_page.h"
+#include "controller.h"
+#include "gource.h"
 
 GtkWidget *init_video_page( GtkWidget *window ) {
     GtkWidget *grid, *widget;

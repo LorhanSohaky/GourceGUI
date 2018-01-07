@@ -18,8 +18,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <controller.h>
-#include <other_page.h>
+#include "other_page.h"
+#include "controller.h"
 
 void save_dialog( GtkWidget *widget, gpointer data );
 

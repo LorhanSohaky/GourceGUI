@@ -18,10 +18,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <controller.h>
-#include <gource.h>
+#include "subtitle_page.h"
+#include "controller.h"
+#include "gource.h"
 #include <stdlib.h>
-#include <subtitle_page.h>
 
 GtkWidget *init_subtitle_page( GtkWidget *window ) {
     GtkWidget *grid, *widget;

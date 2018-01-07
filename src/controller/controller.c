@@ -18,16 +18,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <controller.h>
+#include "controller.h"
+#include "dstring.h"
+#include "gource.h"
+#include "process_creator.h"
+#include "utils.h"
 #include <ctype.h>
-#include <dstring.h>
-#include <gource.h>
-#include <process_creator.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <utils.h>
 
 _gource gource_settings;
 
@@ -192,9 +192,10 @@ bool append_extension_when_necessary( GtkWidget *widget ) {
     tmp = &tmp[strlen( tmp ) - strlen( ".MP4" )];
     string_tolower( tmp );
     if( strcmp( tmp, ".mp4" ) != 0 ) {
-        tmp = (char *)malloc( sizeof( char ) * ( strlen( gtk_file_chooser_get_current_name(
-                                                     GTK_FILE_CHOOSER( widget ) ) ) +
-                                                 strlen( ".mp4" ) ) );
+        tmp = (char *)malloc(
+            sizeof( char ) *
+            ( strlen( gtk_file_chooser_get_current_name( GTK_FILE_CHOOSER( widget ) ) ) +
+              strlen( ".mp4" ) ) );
         if( tmp != NULL ) {
             sprintf(
                 tmp, "%s.mp4", gtk_file_chooser_get_current_name( GTK_FILE_CHOOSER( widget ) ) );

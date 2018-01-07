@@ -18,10 +18,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <process_creator.h>
+#include "process_creator.h"
+#include "utils.h"
 #include <stdio.h>
 #include <string.h>
-#include <utils.h>
 
 #if _WIN32 || _WIN64
 

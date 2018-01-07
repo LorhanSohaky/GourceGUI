@@ -18,10 +18,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <gource.h>
+#include "gource.h"
+#include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <utils.h>
 
 #define STRING_DEFAULT_LENGTH 7 // 6 + 1 for put '\0'
 

@@ -18,12 +18,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <controller.h>
+#include "main_menu.h"
+#include "controller.h"
+#include "other_page.h"
+#include "subtitle_page.h"
+#include "video_page.h"
 #include <gtk/gtk.h>
-#include <main_menu.h>
-#include <other_page.h>
-#include <subtitle_page.h>
-#include <video_page.h>
 
 GtkWidget *add_notebook( GtkWidget *window );
 void add_notebook_tab( GtkWidget *notebook, char *label, GtkWidget *page );

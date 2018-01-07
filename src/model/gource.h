@@ -21,8 +21,8 @@ SOFTWARE.
 #ifndef GOURCE_H
 #define GOURCE_H
 
-#include <dstring.h>
-#include <stdbool.h>
+#include "dstring.h"
+#include <stdlib.h>
 
 // I tested these value, so are good numbers for me (LOL)
 
@@ -49,15 +49,15 @@ static const char *DEFAULT_OUTPUT_GOURCE = NULL;
 #define NUMBER_OF_FIELDS 15
 
 typedef struct {
-    char *repository;
+    String *repository;
     String *title;
-    char *screen_mode;
+    String *screen_mode;
     String *background_color;
-    char *camera_mode;
+    String *camera_mode;
 } Video;
 
 typedef struct {
-    char *file;
+    String *file;
     String *font_size;
     String *duration;
     String *color;
@@ -67,19 +67,19 @@ typedef struct {
     String *auto_skip_seconds;
     String *seconds_per_day;
     String *date_format;
-    char *folder_with_users_avatar_icon;
-    char *output_gorce;
+    String *folder_with_users_avatar_icon;
+    String *output_gorce;
 } Other;
 
 typedef struct {
     Video video;
-    Subtitle subtitle;
+    Caption caption;
     Other other;
 } Gource;
 
 void init_gource_with_default_values( Gource *gource );
 void print_gource( Gource *gource );
 
-bool is_gource_ok( Gource *gource );
+int is_gource_ok( Gource *gource );
 
 #endif

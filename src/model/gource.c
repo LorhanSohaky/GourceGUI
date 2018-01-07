@@ -21,62 +21,86 @@ SOFTWARE.
 #include "gource.h"
 #include "dstring.h"
 #include <stdio.h>
-#include <stdlib.h>
 
-static void init_video_with_default_values( Gource *gource );
-static void init_caption_with_default_values( Gource *gource );
-static void init_other_with_default_values( Gource *gource );
+static void init_video_with_default_values( Video *video );
+static void init_caption_with_default_values( Caption *caption );
+static void init_other_with_default_values( Other *other );
+
+static int is_video_ok( Video *video );
+static int is_caption_ok( Caption *caption );
+static int is_other_ok( Other *other );
 
 void init_string( String **destination, const char *initial_value );
 bool is_malloc_OK( Gource *gource );
 
 void init_gource_with_default_values( Gource *gource ) {
-    init_video_with_default_values( gource );
-    init_caption_with_default_values( gource );
-    init_other_with_default_values( gource );
+    init_video_with_default_values( &gource->video );
+    init_caption_with_default_values( &gource->caption );
+    init_other_with_default_values( &gource->other );
 }
 
-void init_video_with_default_values( Gource *gource ) {
-    gource->video.repository = DEFAULT_REPOSITORY;
-    gource->video.title = DEFAULT_TITLE;
-    gource->video.screen_mode = DEFAULT_SCREEN_MODE;
-    gource->video.background_color = DEFAULT_BACKGROUND_COLOR;
-    gource->video.camera_mode = DEFAULT_CAMERA_MODE;
+void init_video_with_default_values( Video *video ) {
+    video->repository = string_new_with_text( DEFAULT_REPOSITORY );
+    video->title = string_new_with_text( DEFAULT_TITLE );
+    video->screen_mode = string_new_with_text( DEFAULT_SCREEN_MODE );
+    video->background_color = string_new_with_text( DEFAULT_BACKGROUND_COLOR );
+    video->camera_mode = string_new_with_text( DEFAULT_CAMERA_MODE );
 }
 
-void init_caption_with_default_values( Gource *gource ) {
-    gource->caption.file = DEFAULT_CAPTION_FILE;
-    gource->caption.font_size = DEFAULT_CAPTION_FONT_SIZE;
-    gource->caption.duration = DEFAULT_SUBTITLE_DURATION;
-    gource->caption.color = DEFAULT_SUBTITLE_COLOR;
+void init_caption_with_default_values( Caption *caption ) {
+    caption->file = string_new_with_text( DEFAULT_CAPTION_FILE );
+    caption->font_size = string_new_with_text( DEFAULT_CAPTION_FONT_SIZE );
+    caption->duration = string_new_with_text( DEFAULT_CAPTION_DURATION );
+    caption->color = string_new_with_text( DEFAULT_CAPTION_COLOR );
 }
 
-void init_other_with_default_values( Gource *gource ) {
-    gource->other.auto_skip_seconds = DEFAULT_AUTO_SKIP_SECONDS;
-    gource->other.seconds_per_day = DEFAULT_SECONDS_PER_DAY;
-    gource->other.date_format = DEFAULT_DATE_FORMAT;
-    gource->other.folder_with_users_avatar_icon = DEFAULT_FOLDER_WITH_USERS_AVATAR_ICON;
-    gource->other.output_gorce = DEFAULT_OUTPUT_GOURCE;
+void init_other_with_default_values( Other *other ) {
+    other->auto_skip_seconds = string_new_with_text( DEFAULT_AUTO_SKIP_SECONDS );
+    other->seconds_per_day = string_new_with_text( DEFAULT_SECONDS_PER_DAY );
+    other->date_format = string_new_with_text( DEFAULT_DATE_FORMAT );
+    other->folder_with_users_avatar_icon =
+        string_new_with_text( DEFAULT_FOLDER_WITH_USERS_AVATAR_ICON );
+    other->output_gorce = string_new_with_text( DEFAULT_OUTPUT_GOURCE );
+}
+
+int is_gource_ok( Gource *gource ) {
+    return is_video_ok( &gource->video ) && is_caption_ok( &gource->caption ) &&
+        is_other_ok( &gource->other );
+}
+
+static int is_video_ok( Video *video ) {
+    return video->repository && video->title && video->screen_mode && video->background_color &&
+        video->camera_mode;
+}
+
+static int is_caption_ok( Caption *caption ) {
+    return caption->file && caption->font_size && caption->duration && caption->color;
+}
+
+static int is_other_ok( Other *other ) {
+    return other->auto_skip_seconds && other->seconds_per_day && other->date_format &&
+        other->folder_with_users_avatar_icon && other->output_gorce;
 }
 
 void printGource( Gource *gource ) {
     printf( "Video:\n" );
-    printf( "\tRepository - %s\n", gource->video.repository );
+    printf( "\tRepository - %s\n", string_get_text( gource->video.repository ) );
     printf( "\tTitle - %s\n", string_get_text( gource->video.title ) );
-    printf( "\tScreen Mode - %s\n", gource->video.screen_mode );
+    printf( "\tScreen Mode - %s\n", string_get_text( gource->video.screen_mode ) );
     printf( "\tBackground color - %s\n", string_get_text( gource->video.background_color ) );
-    printf( "\tCamer mode - %s\n", gource->video.camera_mode );
+    printf( "\tCamer mode - %s\n", string_get_text( gource->video.camera_mode ) );
 
-    printf( "Subtitle:\n" );
-    printf( "\tSubtitle file - %s\n", gource->subtitle.subtitle_file );
-    printf( "\tFont size - %s\n", string_get_text( gource->subtitle.font_size ) );
-    printf( "\tDuration - %s\n", string_get_text( gource->subtitle.duration ) );
-    printf( "\tColor - %s\n", string_get_text( gource->subtitle.color ) );
+    printf( "caption:\n" );
+    printf( "\tcaption file - %s\n", string_get_text( gource->caption.file ) );
+    printf( "\tFont size - %s\n", string_get_text( gource->caption.font_size ) );
+    printf( "\tDuration - %s\n", string_get_text( gource->caption.duration ) );
+    printf( "\tColor - %s\n", string_get_text( gource->caption.color ) );
 
     printf( "Other:\n" );
     printf( "\tAuto Skip seconds - %s\n", string_get_text( gource->other.auto_skip_seconds ) );
     printf( "\tSeconds per day - %s\n", string_get_text( gource->other.seconds_per_day ) );
     printf( "\tDate format - %s\n", string_get_text( gource->other.date_format ) );
-    printf( "\tFolder with users avatar icon - %s\n", gource->other.folder_with_users_avatar_icon );
-    printf( "\tOutput gource - %s\n", gource->other.output_gorce );
+    printf( "\tFolder with users avatar icon - %s\n",
+            string_get_text( gource->other.folder_with_users_avatar_icon ) );
+    printf( "\tOutput gource - %s\n", string_get_text( gource->other.output_gorce ) );
 }

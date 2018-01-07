@@ -1,25 +1,24 @@
 /*
-The MIT License (MIT)
-Copyright (c) 2016 Lorhan Sohaky
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
+ The MIT License (MIT)
+ Copyright (c) 2016 Lorhan Sohaky
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+ */
 
 #include "controller.h"
-#include "dstring.h"
 #include "gource.h"
 #include "process_creator.h"
 #include "utils.h"
@@ -29,14 +28,12 @@ SOFTWARE.
 #include <stdlib.h>
 #include <string.h>
 
-_gource gource_settings;
-
 #define ARGS_TO_OUTPUT_GOURCE 25
 
 bool append_extension_when_necessary( GtkWidget *widget );
 void string_tolower( char *string );
 
-void add_to_argv_valid_field( _gource *gource, char **argv, int *size );
+void add_to_argv_valid_field( Gource *gource, char **argv, int *size );
 void add_to_argv( char **argv, int *size, char *option, char *value );
 
 void prepare_color( String *color );
@@ -44,23 +41,25 @@ void prepare_screen_mode( char **screen_mode );
 
 bool copy_number_to_string( String *string, int value );
 
-void static free_memory( _gource *gource, bool is_erro );
-void static free_video( _gource *gource );
-void static free_subtitle( _gource *gource );
-void static free_other( _gource *gource );
+static void free_gource( Gource *gource );
+static void free_video( Video *video );
+static void free_caption( Caption *caption );
+static void free_other( Other *other );
 
 int controller( int argc, char *argv[] ) {
-    GtkApplication *app;
+    Gource gource_settings;
+    init_gource_with_default_values( &gource_settings );
     int status = 0;
-    init__gource( &gource_settings );
-    if( is__gource_OK( &gource_settings ) ) {
-        app = gtk_application_new( "org.gourcegui", G_APPLICATION_FLAGS_NONE );
+
+    if( is_gource_ok( &gource_settings ) ) {
+        GtkApplication *app = gtk_application_new( "org.gourcegui", G_APPLICATION_FLAGS_NONE );
         g_signal_connect( app, "activate", G_CALLBACK( activate ), NULL );
         status = g_application_run( G_APPLICATION( app ), argc, argv );
         g_object_unref( app );
-        free_memory( &gource_settings, false );
+        free_gource( &gource_settings );
     } else {
-        free_memory( &gource_settings, true );
+        fprintf( stderr, "Failed to allocate memory.\n" );
+        free_gource( &gource_settings );
     }
     return status;
 }
@@ -85,12 +84,11 @@ void execute( GtkWidget *widget, gpointer data ) {
 // CALLBACKs of subtitle_page
 
 void set_subtitle_file( GtkWidget *widget, gpointer data ) {
-    gource_settings.subtitle.subtitle_file =
-        gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( widget ) );
+    gource_settings.caption.file = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( widget ) );
 }
 
 gboolean set_font_size( GtkWidget *widget, gpointer data ) {
-    if( !copy_number_to_string( gource_settings.subtitle.font_size,
+    if( !copy_number_to_string( gource_settings.caption.font_size,
                                 gtk_spin_button_get_value( GTK_SPIN_BUTTON( widget ) ) ) ) {
         free_memory( &gource_settings, true );
     }
@@ -98,7 +96,7 @@ gboolean set_font_size( GtkWidget *widget, gpointer data ) {
 }
 
 gboolean set_duration( GtkWidget *widget, gpointer data ) {
-    if( !copy_number_to_string( gource_settings.subtitle.duration,
+    if( !copy_number_to_string( gource_settings.caption.duration,
                                 gtk_spin_button_get_value( GTK_SPIN_BUTTON( widget ) ) ) ) {
         free_memory( &gource_settings, true );
     }
@@ -108,7 +106,7 @@ gboolean set_duration( GtkWidget *widget, gpointer data ) {
 void set_subtitle_color( GtkWidget *widget, gpointer data ) {
     GdkRGBA rgba;
     gtk_color_chooser_get_rgba( GTK_COLOR_CHOOSER( widget ), &rgba );
-    if( !string_copy_char_array( gource_settings.subtitle.color,
+    if( !string_copy_char_array( gource_settings.caption.color,
                                  rgba_to_hex( rgba.red, rgba.green, rgba.blue ) ) ) {
         free_memory( &gource_settings, true );
     }
@@ -183,9 +181,9 @@ void string_tolower( char *string ) {
     }
 }
 
-void add_to_argv_valid_field( _gource *gource, char **argv, int *size ) {
+void add_to_argv_valid_field( Gource *gource, char **argv, int *size ) {
     prepare_color( gource->video.background_color );
-    prepare_color( gource->subtitle.color );
+    prepare_color( gource->caption.color );
     if( gource->video.repository != NULL ) {
         add_to_argv( argv, size, NULL, gource->video.repository );
     }
@@ -213,17 +211,17 @@ void add_to_argv_valid_field( _gource *gource, char **argv, int *size ) {
         }
     }
 
-    if( gource->subtitle.subtitle_file != NULL ) {
-        add_to_argv( argv, size, "--caption-file", gource->subtitle.subtitle_file );
+    if( gource->caption.file != NULL ) {
+        add_to_argv( argv, size, "--caption-file", gource->caption.file );
     }
 
-    if( atoi( string_get_text( gource->subtitle.font_size ) ) != 0 ) {
-        add_to_argv( argv, size, "--font-size", string_get_text( gource->subtitle.font_size ) );
+    if( atoi( string_get_text( gource->caption.font_size ) ) != 0 ) {
+        add_to_argv( argv, size, "--font-size", string_get_text( gource->caption.font_size ) );
     }
 
-    add_to_argv( argv, size, "--caption-duration", string_get_text( gource->subtitle.duration ) );
+    add_to_argv( argv, size, "--caption-duration", string_get_text( gource->caption.duration ) );
 
-    add_to_argv( argv, size, "--caption-colour", string_get_text( gource->subtitle.color ) );
+    add_to_argv( argv, size, "--caption-colour", string_get_text( gource->caption.color ) );
 
     if( atoi( string_get_text( gource->other.auto_skip_seconds ) ) != 0 ) {
         add_to_argv(
@@ -291,74 +289,70 @@ bool copy_number_to_string( String *string, int value ) {
     return string_sprint( string, "%d", value ); // 10= decimal
 }
 
-void static free_memory( _gource *gource, bool is_erro ) {
-    if( is_erro == true ) {
-        fprintf( stderr, "Failed to allocate memory.\n" );
-        exit( 0 );
-    }
-    free_video( gource );
-    free_subtitle( gource );
-    free_other( gource );
+void static free_gource( Gource *gource ) {
+    free_video( &gource->video );
+    free_caption( &gource->caption );
+    free_other( &gource->other );
 }
 
-void static free_video( _gource *gource ) {
-    if( gource->video.repository != NULL ) {
-        g_free( gource->video.repository );
+static void free_video( Video *video ) {
+    if( video->repository ) {
+        string_free( video->repository );
     }
 
-    if( gource->video.title != NULL ) {
-        string_free( gource->video.title );
+    if( video->title ) {
+        string_free( video->title );
     }
 
-    if( gource->video.screen_mode != NULL ) {
-        g_free( gource->video.screen_mode );
+    if( video->screen_mode ) {
+        string_free( video->screen_mode );
     }
 
-    if( gource->video.background_color != NULL ) {
-        string_free( gource->video.background_color );
+    if( gource->video.background_color ) {
+        string_free( video->background_color );
     }
 
-    if( gource->video.camera_mode != NULL ) {
-        g_free( gource->video.camera_mode );
+    if( gource->video.camera_mode ) {
+        string_free( video->camera_mode );
     }
 }
 
-void static free_subtitle( _gource *gource ) {
-    if( gource->subtitle.subtitle_file != NULL ) {
-        g_free( gource->subtitle.subtitle_file );
+static void free_caption( Caption *caption ) {
+    if( caption->file ) {
+        string_free( caption->file );
     }
 
-    if( gource->subtitle.font_size != NULL ) {
-        string_free( gource->subtitle.font_size );
+    if( caption->font_size ) {
+        string_free( caption->font_size );
     }
 
-    if( gource->subtitle.duration != NULL ) {
-        string_free( gource->subtitle.duration );
+    if( caption->duration ) {
+        string_free( caption->duration );
     }
 
-    if( gource->subtitle.color != NULL ) {
-        string_free( gource->subtitle.color );
+    if( caption->color ) {
+        string_free( caption->color );
     }
 }
 
-void static free_other( _gource *gource ) {
-    if( gource->other.auto_skip_seconds != NULL ) {
-        string_free( gource->other.auto_skip_seconds );
+static void free_other( Other *other ) {
+    if( other->auto_skip_seconds ) {
+        string_free( other->auto_skip_seconds );
     }
 
-    if( gource->other.seconds_per_day != NULL ) {
-        string_free( gource->other.seconds_per_day );
+    if( other->seconds_per_day ) {
+        string_free( other->seconds_per_day );
     }
 
-    if( gource->other.date_format != NULL ) {
-        string_free( gource->other.date_format );
+    if( other->date_format ) {
+        string_free( other->date_format );
     }
 
-    if( gource->other.folder_with_users_avatar_icon != NULL ) {
-        g_free( gource->other.folder_with_users_avatar_icon );
+    if( other->folder_with_users_avatar_icon ) {
+        string_free( other->folder_with_users_avatar_icon );
     }
 
-    if( gource->other.output_gorce != NULL ) {
-        g_free( gource->other.output_gorce );
+    if( other->output_gorce ) {
+        string_free( other->output_gorce );
     }
 }

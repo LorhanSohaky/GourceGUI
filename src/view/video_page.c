@@ -50,14 +50,18 @@ GtkWidget *init_video_page( GtkWidget *window, Gource *gource ) {
     widget =
         gtk_combo_box_text_new_with_entry(); // TODO Make a drop down list same of
                                              // https://developer.gnome.org/hig/stable/drop-down-lists.html.en
-    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), "Fullscreen" );
-    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), "Windowed" );
-    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), "640x480" );
-    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), "720x480" );
-    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), "1280x720" );
-    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), "1920x1080" );
-    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), "3840x2160" );
-    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), "7680x4320" );
+    char *screen_mode[] = {"Fullscreen",
+                           "Windowed",
+                           "640x480",
+                           "720x480",
+                           "1280x720",
+                           "1920x1080",
+                           "3840x2160",
+                           "7680x4320"};
+    int length_screen_mode = 8;
+    for( int i = 0; i < length_screen_mode; i++ ) {
+        gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), screen_mode[i] );
+    }
     g_signal_connect( widget, "changed", G_CALLBACK( set_screen_mode ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 2, 1, 1 );
 
@@ -75,8 +79,11 @@ GtkWidget *init_video_page( GtkWidget *window, Gource *gource ) {
 
     widget = gtk_combo_box_text_new();
     gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), " " );
-    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), "Overview" );
-    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), "Track" );
+    char *camera_mode[] = {"Overview", "Track"};
+    int length_camera_mode = 2;
+    for( int i = 0; i < length_camera_mode; i++ ) {
+        gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), camera_mode );
+    }
     g_signal_connect( widget, "changed", G_CALLBACK( set_camera_mode ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 4, 1, 1 );
 

@@ -48,7 +48,7 @@ GtkWidget *init_caption_page( GtkWidget *window, Gource *gource ) {
     widget = gtk_label_new( "Duration: " );
     gtk_grid_attach( GTK_GRID( grid ), widget, 0, 2, 1, 1 );
 
-    widget = gtk_spin_button_new_with_range( 0, 100, 1 );
+    widget = gtk_spin_button_new_with_range( 0, 100, 0.1 );
     gtk_spin_button_set_value( GTK_SPIN_BUTTON( widget ), atoi( DEFAULT_CAPTION_DURATION ) );
     g_signal_connect( widget, "focus-out-event", G_CALLBACK( set_duration ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 2, 1, 1 );

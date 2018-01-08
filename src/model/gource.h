@@ -82,4 +82,6 @@ void print_gource( Gource *gource );
 
 int is_gource_ok( Gource *gource );
 
+void free_gource( Gource *gource );
+
 #endif

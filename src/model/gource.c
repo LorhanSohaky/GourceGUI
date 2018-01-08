@@ -30,6 +30,10 @@ static int is_video_ok( Video *video );
 static int is_caption_ok( Caption *caption );
 static int is_other_ok( Other *other );
 
+static void free_video( Video *video );
+static void free_caption( Caption *caption );
+static void free_other( Other *other );
+
 void init_string( String **destination, const char *initial_value );
 bool is_malloc_OK( Gource *gource );
 
@@ -103,4 +107,72 @@ void print_gource( Gource *gource ) {
     printf( "\tFolder with users avatar icon - %s\n",
             string_get_text( gource->other.folder_with_users_avatar_icon ) );
     printf( "\tOutput gource - %s\n", string_get_text( gource->other.output_gorce ) );
+}
+
+void free_gource( Gource *gource ) {
+    free_video( &gource->video );
+    free_caption( &gource->caption );
+    free_other( &gource->other );
+}
+
+static void free_video( Video *video ) {
+    if( video->repository ) {
+        string_free( video->repository );
+    }
+
+    if( video->title ) {
+        string_free( video->title );
+    }
+
+    if( video->screen_mode ) {
+        string_free( video->screen_mode );
+    }
+
+    if( video->background_color ) {
+        string_free( video->background_color );
+    }
+
+    if( video->camera_mode ) {
+        string_free( video->camera_mode );
+    }
+}
+
+static void free_caption( Caption *caption ) {
+    if( caption->file ) {
+        string_free( caption->file );
+    }
+
+    if( caption->font_size ) {
+        string_free( caption->font_size );
+    }
+
+    if( caption->duration ) {
+        string_free( caption->duration );
+    }
+
+    if( caption->color ) {
+        string_free( caption->color );
+    }
+}
+
+static void free_other( Other *other ) {
+    if( other->auto_skip_seconds ) {
+        string_free( other->auto_skip_seconds );
+    }
+
+    if( other->seconds_per_day ) {
+        string_free( other->seconds_per_day );
+    }
+
+    if( other->date_format ) {
+        string_free( other->date_format );
+    }
+
+    if( other->folder_with_users_avatar_icon ) {
+        string_free( other->folder_with_users_avatar_icon );
+    }
+
+    if( other->output_gorce ) {
+        string_free( other->output_gorce );
+    }
 }

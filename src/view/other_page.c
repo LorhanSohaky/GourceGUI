@@ -34,6 +34,8 @@ GtkWidget *init_other_page( GtkWidget *window, Gource *gource ) {
     gtk_grid_attach( GTK_GRID( grid ), widget, 0, 0, 1, 1 );
 
     widget = gtk_spin_button_new_with_range( 0, 100, 0.1 );
+    gtk_spin_button_set_value( GTK_SPIN_BUTTON( widget ),
+                               atof( string_get_text( gource->other.auto_skip_seconds ) ) );
     g_signal_connect( widget, "focus-out-event", G_CALLBACK( set_auto_skip ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 0, 1, 1 );
 
@@ -41,6 +43,8 @@ GtkWidget *init_other_page( GtkWidget *window, Gource *gource ) {
     gtk_grid_attach( GTK_GRID( grid ), widget, 0, 1, 1, 1 );
 
     widget = gtk_spin_button_new_with_range( 0, 100, 0.1 );
+    gtk_spin_button_set_value( GTK_SPIN_BUTTON( widget ),
+                               atof( string_get_text( gource->other.seconds_per_day ) ) );
     g_signal_connect( widget, "focus-out-event", G_CALLBACK( set_seconds_per_day ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 1, 1, 1 );
 
@@ -48,6 +52,7 @@ GtkWidget *init_other_page( GtkWidget *window, Gource *gource ) {
     gtk_grid_attach( GTK_GRID( grid ), widget, 0, 2, 1, 1 );
 
     widget = gtk_entry_new();
+    gtk_entry_set_text( GTK_ENTRY( widget ), string_get_text( gource->other.date_format ) );
     g_signal_connect( widget, "focus-out-event", G_CALLBACK( set_date_format ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 2, 1, 1 );
 
@@ -56,6 +61,8 @@ GtkWidget *init_other_page( GtkWidget *window, Gource *gource ) {
 
     widget = gtk_file_chooser_button_new( "Select the folder with user avatar",
                                           GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER );
+    gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( widget ),
+                                   string_get_text( gource->other.folder_with_users_avatar_icon ) );
     g_signal_connect( widget, "file-set", G_CALLBACK( set_avatar_folder ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 3, 1, 1 );
 

@@ -35,6 +35,8 @@ GtkWidget *init_caption_page( GtkWidget *window, Gource *gource ) {
 
     widget = gtk_file_chooser_button_new( "Choose a file for the caption",
                                           GTK_FILE_CHOOSER_ACTION_OPEN );
+    gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( widget ),
+                                   string_get_text( gource->caption.file ) );
     g_signal_connect( widget, "file-set", G_CALLBACK( set_caption_file ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 0, 1, 1 );
 
@@ -42,6 +44,8 @@ GtkWidget *init_caption_page( GtkWidget *window, Gource *gource ) {
     gtk_grid_attach( GTK_GRID( grid ), widget, 0, 1, 1, 1 );
 
     widget = gtk_spin_button_new_with_range( 0, 100, 1 );
+    gtk_spin_button_set_value( GTK_SPIN_BUTTON( widget ),
+                               atoi( string_get_text( gource->caption.font_size ) ) );
     g_signal_connect( widget, "focus-out-event", G_CALLBACK( set_font_size ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 1, 1, 1 );
 
@@ -49,14 +53,15 @@ GtkWidget *init_caption_page( GtkWidget *window, Gource *gource ) {
     gtk_grid_attach( GTK_GRID( grid ), widget, 0, 2, 1, 1 );
 
     widget = gtk_spin_button_new_with_range( 0, 100, 0.1 );
-    gtk_spin_button_set_value( GTK_SPIN_BUTTON( widget ), atoi( DEFAULT_CAPTION_DURATION ) );
+    gtk_spin_button_set_value( GTK_SPIN_BUTTON( widget ),
+                               atof( string_get_text( gource->caption.duration ) ) );
     g_signal_connect( widget, "focus-out-event", G_CALLBACK( set_duration ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 2, 1, 1 );
 
     widget = gtk_label_new( "Color: " );
     gtk_grid_attach( GTK_GRID( grid ), widget, 0, 3, 1, 1 );
 
-    gdk_rgba_parse( &rgba, DEFAULT_CAPTION_COLOR );
+    gdk_rgba_parse( &rgba, string_get_text( gource->caption.color ) );
     widget = gtk_color_button_new_with_rgba( &rgba );
     gtk_color_button_set_title( GTK_COLOR_BUTTON( widget ), "Choose a color for the caption" );
     g_signal_connect( widget, "color-set", G_CALLBACK( set_caption_color ), gource );

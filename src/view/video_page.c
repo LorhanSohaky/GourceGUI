@@ -20,6 +20,7 @@ SOFTWARE.
 
 #include "video_page.h"
 #include "call_backs_video_page.h"
+#include <string.h>
 
 GtkWidget *init_video_page( GtkWidget *window, Gource *gource ) {
     GtkWidget *grid, *widget;
@@ -34,6 +35,8 @@ GtkWidget *init_video_page( GtkWidget *window, Gource *gource ) {
 
     widget = gtk_file_chooser_button_new( "Select the folder of the repository",
                                           GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER );
+    gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( widget ),
+                                   string_get_text( gource->video.repository ) );
     g_signal_connect( widget, "file-set", G_CALLBACK( set_repository ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 0, 1, 1 );
 
@@ -41,6 +44,7 @@ GtkWidget *init_video_page( GtkWidget *window, Gource *gource ) {
     gtk_grid_attach( GTK_GRID( grid ), widget, 0, 1, 1, 1 );
 
     widget = gtk_entry_new();
+    gtk_entry_set_text( GTK_ENTRY( widget ), string_get_text( gource->video.title ) );
     g_signal_connect( widget, "focus-out-event", G_CALLBACK( set_title ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 1, 1, 1 );
 
@@ -59,16 +63,21 @@ GtkWidget *init_video_page( GtkWidget *window, Gource *gource ) {
                            "3840x2160",
                            "7680x4320"};
     int length_screen_mode = 8;
+    int index_default_screen_mode = 0;
     for( int i = 0; i < length_screen_mode; i++ ) {
+        if( !strcmp( screen_mode[i], string_get_text( gource->video.screen_mode ) ) ) {
+            index_default_screen_mode = i;
+        }
         gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), screen_mode[i] );
     }
+    gtk_combo_box_set_active( GTK_COMBO_BOX( widget ), index_default_screen_mode );
     g_signal_connect( widget, "changed", G_CALLBACK( set_screen_mode ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 2, 1, 1 );
 
     widget = gtk_label_new( "Background color: " );
     gtk_grid_attach( GTK_GRID( grid ), widget, 0, 3, 1, 1 );
 
-    gdk_rgba_parse( &rgba, DEFAULT_BACKGROUND_COLOR );
+    gdk_rgba_parse( &rgba, string_get_text( gource->video.background_color ) );
     widget = gtk_color_button_new_with_rgba( &rgba );
     gtk_color_button_set_title( GTK_COLOR_BUTTON( widget ), "Choose a color for the background" );
     g_signal_connect( widget, "color-set", G_CALLBACK( set_background_color ), gource );
@@ -81,9 +90,14 @@ GtkWidget *init_video_page( GtkWidget *window, Gource *gource ) {
     gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), " " );
     char *camera_mode[] = {"Overview", "Track"};
     int length_camera_mode = 2;
+    int index_default_camera_mode = 0;
     for( int i = 0; i < length_camera_mode; i++ ) {
+        if( !strcmp( camera_mode[i], string_get_text( gource->video.camera_mode ) ) ) {
+            index_default_camera_mode = i;
+        }
         gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), camera_mode[i] );
     }
+    gtk_combo_box_set_active( GTK_COMBO_BOX( widget ), index_default_camera_mode );
     g_signal_connect( widget, "changed", G_CALLBACK( set_camera_mode ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 4, 1, 1 );
 

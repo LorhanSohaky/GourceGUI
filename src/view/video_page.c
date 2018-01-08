@@ -82,7 +82,7 @@ GtkWidget *init_video_page( GtkWidget *window, Gource *gource ) {
     char *camera_mode[] = {"Overview", "Track"};
     int length_camera_mode = 2;
     for( int i = 0; i < length_camera_mode; i++ ) {
-        gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), camera_mode );
+        gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), camera_mode[i] );
     }
     g_signal_connect( widget, "changed", G_CALLBACK( set_camera_mode ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 4, 1, 1 );

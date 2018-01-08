@@ -33,14 +33,14 @@ GtkWidget *init_other_page( GtkWidget *window, Gource *gource ) {
     widget = gtk_label_new( "Auto skip seconds: " );
     gtk_grid_attach( GTK_GRID( grid ), widget, 0, 0, 1, 1 );
 
-    widget = gtk_spin_button_new_with_range( 0, 100, 1 );
+    widget = gtk_spin_button_new_with_range( 0, 100, 0.1 );
     g_signal_connect( widget, "focus-out-event", G_CALLBACK( set_auto_skip ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 0, 1, 1 );
 
     widget = gtk_label_new( "Seconds per day: " );
     gtk_grid_attach( GTK_GRID( grid ), widget, 0, 1, 1, 1 );
 
-    widget = gtk_spin_button_new_with_range( 0, 100, 1 );
+    widget = gtk_spin_button_new_with_range( 0, 100, 0.1 );
     g_signal_connect( widget, "focus-out-event", G_CALLBACK( set_seconds_per_day ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 1, 1, 1 );
 

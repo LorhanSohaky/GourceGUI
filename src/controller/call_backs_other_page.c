@@ -9,7 +9,7 @@ static bool append_extension_when_necessary( GtkWidget *widget );
 gboolean set_auto_skip( GtkWidget *widget, GdkEvent *event, gpointer data ) {
     Gource *gource = (Gource *)data;
     string_sprint( gource->other.auto_skip_seconds,
-                   "%d",
+                   "%f",
                    gtk_spin_button_get_value( GTK_SPIN_BUTTON( widget ) ) );
     return FALSE;
 }
@@ -17,7 +17,7 @@ gboolean set_auto_skip( GtkWidget *widget, GdkEvent *event, gpointer data ) {
 gboolean set_seconds_per_day( GtkWidget *widget, GdkEvent *event, gpointer data ) {
     Gource *gource = (Gource *)data;
     string_sprint( gource->other.seconds_per_day,
-                   "%d",
+                   "%f",
                    gtk_spin_button_get_value( GTK_SPIN_BUTTON( widget ) ) );
     return FALSE;
 }

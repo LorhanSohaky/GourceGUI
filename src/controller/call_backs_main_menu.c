@@ -13,7 +13,6 @@ void execute( GtkWidget *widget, gpointer data ) {
     //    if( argv != NULL ) {
     // add_to_argv_valid_field( &gource_settings, argv, &number_of_fields );
     // call_prog( "/usr/bin/gource", argv, number_of_fields );
-    printf( "Olamudo\n" );
     //    } else {
     // free_memory( &gource_settings, true );
     //    }

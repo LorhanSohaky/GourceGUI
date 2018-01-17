@@ -12,15 +12,16 @@ void set_caption_file( GtkWidget *widget, gpointer data ) {
 
 gboolean set_font_size( GtkWidget *widget, GdkEvent *event, gpointer data ) {
     Gource *gource = (Gource *)data;
-    string_sprint(
-        gource->caption.font_size, "%d", gtk_spin_button_get_value( GTK_SPIN_BUTTON( widget ) ) );
+    string_sprint( gource->caption.font_size,
+                   "%d",
+                   (int)gtk_spin_button_get_value( GTK_SPIN_BUTTON( widget ) ) );
     return FALSE;
 }
 
 gboolean set_duration( GtkWidget *widget, GdkEvent *event, gpointer data ) {
     Gource *gource = (Gource *)data;
     string_sprint(
-        gource->caption.duration, "%d", gtk_spin_button_get_value( GTK_SPIN_BUTTON( widget ) ) );
+        gource->caption.duration, "%f", gtk_spin_button_get_value( GTK_SPIN_BUTTON( widget ) ) );
     return FALSE;
 }
 

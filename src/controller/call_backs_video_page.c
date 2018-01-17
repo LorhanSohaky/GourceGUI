@@ -10,9 +10,9 @@ void set_repository( GtkWidget *widget, gpointer data ) {
     g_free( repository );
 }
 
-gboolean set_title( GtkWidget *widget, gpointer data ) {
+gboolean set_title( GtkWidget *widget, GdkEvent *event, gpointer data ) {
     Gource *gource = (Gource *)data;
-    string_set_text( gource->video.title, gtk_entry_get_text( GTK_ENTRY( widget ) ) );
+    string_set_text( gource->video.repository, gtk_entry_get_text( GTK_ENTRY( widget ) ) );
 
     return FALSE;
 }

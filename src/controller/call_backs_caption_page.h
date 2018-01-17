@@ -5,8 +5,8 @@
 #include <gtk/gtk.h>
 
 void set_caption_file( GtkWidget *widget, gpointer data );
-gboolean set_font_size( GtkWidget *widget, gpointer data );
-gboolean set_duration( GtkWidget *widget, gpointer data );
+gboolean set_font_size( GtkWidget *widget, GdkEvent *event, gpointer data );
+gboolean set_duration( GtkWidget *widget, GdkEvent *event, gpointer data );
 void set_caption_color( GtkWidget *widget, gpointer data );
 
 #endif

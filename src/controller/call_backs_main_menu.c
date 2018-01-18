@@ -1,20 +1,74 @@
 #include "call_backs_main_menu.h"
 #include "gource.h"
 #include "process_creator.h"
+#include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#define ARGS_TO_OUTPUT_GOURCE 25
+static void add_gource_arguments( char *arguments[], Gource *gource, unsigned int *count );
+
+static void add_video_arguments( char *arguments[], Video *video, unsigned int *count );
 
 void execute( GtkWidget *widget, gpointer data ) {
     Gource *gource = (Gource *)data;
-    print_gource( gource );
+    unsigned int number_of_arguments = 0;
 
-    //    if( argv != NULL ) {
-    // add_to_argv_valid_field( &gource_settings, argv, &number_of_fields );
-    // call_prog( "/usr/bin/gource", argv, number_of_fields );
-    //    } else {
-    // free_memory( &gource_settings, true );
-    //    }
-    // print_gource( gource_settings );
+    char **arguments_for_gource = calloc( NUMBER_OF_FIELDS * 2 + 2,
+                                          sizeof( char ** ) ); // +2 because the first argument is
+                                                               // the program itself and the last
+                                                               // is the NULL
+    if( arguments_for_gource ) {
+        arguments_for_gource[number_of_arguments++] = "/usr/bin/gource";
+        add_gource_arguments( arguments_for_gource, gource, &number_of_arguments );
+        call_prog( "/usr/bin/gource", arguments_for_gource, number_of_arguments );
+    }
+
+    print_gource( gource );
+}
+
+static void add_gource_arguments( char *arguments[], Gource *gource, unsigned int *count ) {
+    add_video_arguments( arguments, &gource->video, count );
+
+    arguments[( *count )] = NULL;
+}
+
+static void add_video_arguments( char *arguments[], Video *video, unsigned int *count ) {
+    if( !string_is_empty( video->repository ) ) {
+        arguments[( *count )++] = string_get_text( video->repository );
+    }
+
+    if( !string_is_empty( video->title ) ) {
+        arguments[( *count )++] = "--title";
+
+        arguments[( *count )++] = string_get_text( video->title );
+    }
+
+    if( !string_is_empty( video->screen_mode ) ) {
+        if( !strcmp( "Fullscreen", string_get_text( video->screen_mode ) ) ) {
+            arguments[( *count )++] = "-f";
+        } else if( !strcmp( "Windowed", string_get_text( video->screen_mode ) ) ) {
+            arguments[( *count )++] = "-w";
+        } else {
+            String *tmp = string_new_with_text( string_get_text( video->screen_mode ) );
+            string_sprint( video->screen_mode, "-%s", string_get_text( tmp ) );
+            string_free( tmp );
+
+            arguments[( *count )++] = string_get_text( video->screen_mode );
+        }
+    }
+
+    if( !string_is_empty( video->background_color ) ) {
+        arguments[( *count )++] = "-b";
+
+        string_replace_first( video->background_color, "#", "" );
+        arguments[( *count )++] = string_get_text( video->background_color );
+    }
+
+    if( !string_is_empty( video->camera_mode ) ) {
+        arguments[( *count )++] = "--camera-mode";
+
+        string_tolower( string_get_text( video->camera_mode ) );
+        arguments[( *count )++] = string_get_text( video->camera_mode );
+    }
 }

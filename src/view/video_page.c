@@ -87,7 +87,7 @@ GtkWidget *init_video_page( GtkWidget *window, Gource *gource ) {
     gtk_grid_attach( GTK_GRID( grid ), widget, 0, 4, 1, 1 );
 
     widget = gtk_combo_box_text_new();
-    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), " " );
+    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( widget ), "" );
     char *camera_mode[] = {"Overview", "Track"};
     int length_camera_mode = 2;
     int index_default_camera_mode = 0;

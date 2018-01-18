@@ -9,6 +9,7 @@
 static void add_gource_arguments( char *arguments[], Gource *gource, unsigned int *count );
 
 static void add_video_arguments( char *arguments[], Video *video, unsigned int *count );
+static void add_caption_arguments( char *arguments[], Caption *caption, unsigned int *count );
 
 void execute( GtkWidget *widget, gpointer data ) {
     Gource *gource = (Gource *)data;
@@ -29,6 +30,7 @@ void execute( GtkWidget *widget, gpointer data ) {
 
 static void add_gource_arguments( char *arguments[], Gource *gource, unsigned int *count ) {
     add_video_arguments( arguments, &gource->video, count );
+    add_caption_arguments( arguments, &gource->caption, count );
 
     arguments[( *count )] = NULL;
 }
@@ -70,5 +72,33 @@ static void add_video_arguments( char *arguments[], Video *video, unsigned int *
 
         string_tolower( string_get_text( video->camera_mode ) );
         arguments[( *count )++] = string_get_text( video->camera_mode );
+    }
+}
+
+static void add_caption_arguments( char *arguments[], Caption *caption, unsigned int *count ) {
+    if( !string_is_empty( caption->file ) ) {
+        arguments[( *count )++] = "--caption-file";
+
+        arguments[( *count )++] = string_get_text( caption->file );
+    }
+
+    if( !string_is_empty( caption->font_size ) ||
+        strcmp( string_get_text( caption->font_size ), "0" ) ) {
+        arguments[( *count )++] = "--caption-size";
+
+        arguments[( *count )++] = string_get_text( caption->font_size );
+    }
+
+    if( !string_is_empty( caption->duration ) ||
+        strcmp( string_get_text( caption->duration ), "0" ) ) {
+        arguments[( *count )++] = "--caption-duration";
+        arguments[( *count )++] = string_get_text( caption->duration );
+    }
+
+    if( !string_is_empty( caption->color ) ) {
+        arguments[( *count )++] = "--caption-colour";
+
+        string_replace_first( caption->color, "#", "" );
+        arguments[( *count )++] = string_get_text( caption->color );
     }
 }

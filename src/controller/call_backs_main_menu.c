@@ -10,6 +10,7 @@ static void add_gource_arguments( char *arguments[], Gource *gource, unsigned in
 
 static void add_video_arguments( char *arguments[], Video *video, unsigned int *count );
 static void add_caption_arguments( char *arguments[], Caption *caption, unsigned int *count );
+static void add_other_arguments( char *arguments[], Other *other, unsigned int *count );
 
 void execute( GtkWidget *widget, gpointer data ) {
     Gource *gource = (Gource *)data;
@@ -31,6 +32,7 @@ void execute( GtkWidget *widget, gpointer data ) {
 static void add_gource_arguments( char *arguments[], Gource *gource, unsigned int *count ) {
     add_video_arguments( arguments, &gource->video, count );
     add_caption_arguments( arguments, &gource->caption, count );
+    add_other_arguments( arguments, &gource->other, count );
 
     arguments[( *count )] = NULL;
 }
@@ -100,5 +102,37 @@ static void add_caption_arguments( char *arguments[], Caption *caption, unsigned
 
         string_replace_first( caption->color, "#", "" );
         arguments[( *count )++] = string_get_text( caption->color );
+    }
+}
+
+static void add_other_arguments( char *arguments[], Other *other, unsigned int *count ) {
+    if( !string_is_empty( other->auto_skip_seconds ) ||
+        strcmp( string_get_text( other->auto_skip_seconds ), "0" ) ) {
+        arguments[( *count )++] = "--auto-skip-seconds";
+
+        arguments[( *count )++] = string_get_text( other->auto_skip_seconds );
+    }
+
+    if( !string_is_empty( other->seconds_per_day ) ||
+        strcmp( string_get_text( other->seconds_per_day ), "0" ) ) {
+        arguments[( *count )++] = "--seconds-per-day";
+
+        arguments[( *count )++] = string_get_text( other->seconds_per_day );
+    }
+
+    if( !string_is_empty( other->date_format ) ) {
+        arguments[( *count )++] = "--date-format";
+
+        arguments[( *count )++] = string_get_text( other->date_format );
+    }
+
+    if( !string_is_empty( other->folder_with_users_avatar_icon ) ) {
+        arguments[( *count )++] = "--user-image-dir";
+
+        arguments[( *count )++] = string_get_text( other->folder_with_users_avatar_icon );
+    }
+
+    if( !string_is_empty( other->output_gorce ) ) {
+        // Oa
     }
 }

@@ -46,7 +46,7 @@ SOFTWARE.
 #define DEFAULT_FOLDER_WITH_USERS_AVATAR_ICON ""
 #define DEFAULT_OUTPUT_GOURCE ""
 
-#define NUMBER_OF_FIELDS 15
+#define NUMBER_OF_FIELDS 14
 
 typedef struct {
     String *repository;

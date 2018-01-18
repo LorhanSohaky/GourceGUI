@@ -16,10 +16,11 @@ void execute( GtkWidget *widget, gpointer data ) {
     Gource *gource = (Gource *)data;
     unsigned int number_of_arguments = 0;
 
-    char **arguments_for_gource = calloc( NUMBER_OF_FIELDS * 2 + 2,
+    char **arguments_for_gource = calloc( NUMBER_OF_FIELDS * 2 + 2 + 25,
                                           sizeof( char ** ) ); // +2 because the first argument is
                                                                // the program itself and the last
                                                                // is the NULL
+                                                               // +25 to output gource option
     if( arguments_for_gource ) {
         arguments_for_gource[number_of_arguments++] = "/usr/bin/gource";
         add_gource_arguments( arguments_for_gource, gource, &number_of_arguments );
@@ -130,9 +131,5 @@ static void add_other_arguments( char *arguments[], Other *other, unsigned int *
         arguments[( *count )++] = "--user-image-dir";
 
         arguments[( *count )++] = string_get_text( other->folder_with_users_avatar_icon );
-    }
-
-    if( !string_is_empty( other->output_gorce ) ) {
-        // Oa
     }
 }

@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-static bool append_extension_when_necessary( GtkWidget *widget );
+// TODO static bool append_extension_when_necessary( GtkWidget *widget );
 
 gboolean set_auto_skip( GtkWidget *widget, GdkEvent *event, gpointer data ) {
     Gource *gource = (Gource *)data;
@@ -37,7 +37,7 @@ void set_avatar_folder( GtkWidget *widget, gpointer data ) {
     g_free( folder_with_users_avatar_icon );
 }
 
-void set_output_gource( GtkWidget *widget, gpointer data ) {
+/*TODO void set_output_gource( GtkWidget *widget, gpointer data ) {
     Gource *gource = (Gource *)data;
     if( append_extension_when_necessary( widget ) ) {
         gchar *output_gorce = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( widget ) );
@@ -67,3 +67,4 @@ static bool append_extension_when_necessary( GtkWidget *widget ) {
     }
     return true;
 }
+*/

@@ -64,7 +64,6 @@ void init_other_with_default_values( Other *other ) {
     other->date_format = string_new_with_text( DEFAULT_DATE_FORMAT );
     other->folder_with_users_avatar_icon =
         string_new_with_text( DEFAULT_FOLDER_WITH_USERS_AVATAR_ICON );
-    other->output_gorce = string_new_with_text( DEFAULT_OUTPUT_GOURCE );
 }
 
 int is_gource_ok( Gource *gource ) {
@@ -83,7 +82,7 @@ static int is_caption_ok( Caption *caption ) {
 
 static int is_other_ok( Other *other ) {
     return other->auto_skip_seconds && other->seconds_per_day && other->date_format &&
-        other->folder_with_users_avatar_icon && other->output_gorce;
+        other->folder_with_users_avatar_icon;
 }
 
 void print_gource( Gource *gource ) {
@@ -106,7 +105,6 @@ void print_gource( Gource *gource ) {
     printf( "\tDate format - %s\n", string_get_text( gource->other.date_format ) );
     printf( "\tFolder with users avatar icon - %s\n",
             string_get_text( gource->other.folder_with_users_avatar_icon ) );
-    printf( "\tOutput gource - %s\n", string_get_text( gource->other.output_gorce ) );
 }
 
 void free_gource( Gource *gource ) {
@@ -170,9 +168,5 @@ static void free_other( Other *other ) {
 
     if( other->folder_with_users_avatar_icon ) {
         string_free( other->folder_with_users_avatar_icon );
-    }
-
-    if( other->output_gorce ) {
-        string_free( other->output_gorce );
     }
 }

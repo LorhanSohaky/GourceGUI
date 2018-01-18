@@ -21,7 +21,7 @@ SOFTWARE.
 #include "other_page.h"
 #include "call_backs_other_page.h"
 
-void save_dialog( GtkWidget *widget, gpointer data );
+// TODO void save_dialog( GtkWidget *widget, gpointer data );
 
 GtkWidget *init_other_page( GtkWidget *window, Gource *gource ) {
     GtkWidget *grid, *widget;
@@ -66,14 +66,14 @@ GtkWidget *init_other_page( GtkWidget *window, Gource *gource ) {
     g_signal_connect( widget, "file-set", G_CALLBACK( set_avatar_folder ), gource );
     gtk_grid_attach( GTK_GRID( grid ), widget, 1, 3, 1, 1 );
 
-    widget = gtk_button_new_with_label( "Output gource at file " );
+    /*TODO widget = gtk_button_new_with_label( "Output gource at file " );
     g_signal_connect( widget, "clicked", G_CALLBACK( save_dialog ), gource );
-    gtk_grid_attach( GTK_GRID( grid ), widget, 0, 4, 2, 1 );
+    gtk_grid_attach( GTK_GRID( grid ), widget, 0, 4, 2, 1 );*/
 
     return grid;
 }
 
-void save_dialog( GtkWidget *widget, gpointer data ) {
+/*TODO void save_dialog( GtkWidget *widget, gpointer data ) {
     GtkFileFilter *filter;
     Gource *gource = (Gource *)data;
     filter = gtk_file_filter_new();
@@ -81,7 +81,7 @@ void save_dialog( GtkWidget *widget, gpointer data ) {
     gtk_file_filter_add_pattern( filter, "*.mp4" );
     gtk_file_filter_set_name( filter, ".mp4" );
     GtkWidget *dialog = gtk_file_chooser_dialog_new( "Choose a file to save a video of Gource",
-                                                     NULL, /*GTK_WINDOW(window)*/
+                                                     NULL, //GTK_WINDOW(window)
                                                      GTK_FILE_CHOOSER_ACTION_SAVE,
                                                      "Save",
                                                      GTK_RESPONSE_ACCEPT,
@@ -98,3 +98,4 @@ void save_dialog( GtkWidget *widget, gpointer data ) {
     }
     gtk_widget_destroy( dialog );
 }
+*/

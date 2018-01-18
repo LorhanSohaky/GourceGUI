@@ -44,7 +44,6 @@ SOFTWARE.
 #define DEFAULT_SECONDS_PER_DAY "2"
 #define DEFAULT_DATE_FORMAT "%d/%m/%y  %H:%M:%S"
 #define DEFAULT_FOLDER_WITH_USERS_AVATAR_ICON ""
-#define DEFAULT_OUTPUT_GOURCE ""
 
 #define NUMBER_OF_FIELDS 14
 
@@ -68,7 +67,6 @@ typedef struct {
     String *seconds_per_day;
     String *date_format;
     String *folder_with_users_avatar_icon;
-    String *output_gorce;
 } Other;
 
 typedef struct {

@@ -23,17 +23,7 @@
 #include "gource.h"
 #include "process_creator.h"
 #include "utils.h"
-#include <ctype.h>
-#include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-void add_to_argv_valid_field( Gource *gource, char **argv, int *size );
-void add_to_argv( char **argv, int *size, char *option, String *value );
-
-void prepare_color( String *color );
-void prepare_screen_mode( String *screen_mode );
 
 int controller( int argc, char *argv[] ) {
     Gource gource_settings;
@@ -51,103 +41,4 @@ int controller( int argc, char *argv[] ) {
         free_gource( &gource_settings );
     }
     return status;
-}
-
-void add_to_argv_valid_field( Gource *gource, char **argv, int *size ) {
-    prepare_color( gource->video.background_color );
-    prepare_color( gource->caption.color );
-    if( gource->video.repository != NULL ) {
-        add_to_argv( argv, size, NULL, gource->video.repository );
-    }
-
-    if( strcmp( string_get_text( gource->video.title ), " " ) != 0 ) { // space=default value
-        add_to_argv( argv, size, "--title", gource->video.title );
-    }
-
-    if( gource->video.screen_mode != NULL ) {
-        if( strcmp( string_get_text( gource->video.screen_mode ), "Fullscreen" ) == 0 ) {
-            add_to_argv( argv, size, "--fullscreen", NULL );
-        } else if( strcmp( string_get_text( gource->video.screen_mode ), "Windowed" ) == 0 ) {
-            add_to_argv( argv, size, "--windowed", NULL );
-        } else {
-            prepare_screen_mode( gource->video.screen_mode );
-            add_to_argv( argv, size, NULL, gource->video.screen_mode );
-        }
-    }
-
-    if( gource->video.camera_mode != NULL ) {
-        if( strcmp( string_get_text( gource->video.camera_mode ), "Overview" ) == 0 ) {
-            String *tmp = string_new_with_text( "overview" );
-            add_to_argv( argv, size, "--camera-mode", tmp );
-        } else if( strcmp( string_get_text( gource->video.camera_mode ), "Track" ) == 0 ) {
-            String *tmp = string_new_with_text( "track" );
-            add_to_argv( argv, size, "--camera-mode", tmp );
-        }
-    }
-
-    if( gource->caption.file != NULL ) {
-        add_to_argv( argv, size, "--caption-file", gource->caption.file );
-    }
-
-    if( atoi( string_get_text( gource->caption.font_size ) ) != 0 ) {
-        add_to_argv( argv, size, "--font-size", gource->caption.font_size );
-    }
-
-    add_to_argv( argv, size, "--caption-duration", gource->caption.duration );
-
-    add_to_argv( argv, size, "--caption-colour", gource->caption.color );
-
-    if( atoi( string_get_text( gource->other.auto_skip_seconds ) ) != 0 ) {
-        add_to_argv( argv, size, "--auto-skip-seconds", gource->other.auto_skip_seconds );
-    }
-
-    if( atoi( string_get_text( gource->other.seconds_per_day ) ) != 0 ) {
-        add_to_argv( argv, size, "--seconds-per-day", gource->other.seconds_per_day );
-    }
-
-    if( !string_is_empty( gource->other.date_format ) &&
-        strcmp( string_get_text( gource->other.date_format ), " " ) != 0 ) {
-        add_to_argv( argv, size, "--date-format", gource->other.date_format );
-    }
-
-    if( gource->other.folder_with_users_avatar_icon != NULL ) {
-        add_to_argv( argv, size, "--user-image-dir", gource->other.folder_with_users_avatar_icon );
-    }
-
-    if( gource->other.output_gorce != NULL ) {
-        // TODO To Implement
-        /*add_to_argv(argv,size,"-o","-");
-        add_to_argv(argv,size,"|","/usr/bin/ffmpeg");
-        add_to_argv(argv,size,"-y","-r");
-        add_to_argv(argv,size,"60","-f");
-        add_to_argv(argv,size,"image2pipe","-vcodec");
-        add_to_argv(argv,size,"ppm","-i");
-        add_to_argv(argv,size,"-","-vcodec");
-        add_to_argv(argv,size,"libx264","-preset");
-        add_to_argv(argv,size,"ultrafast","-pix_fmt");
-        add_to_argv(argv,size,"yuv420p","-crf");
-        add_to_argv(argv,size,"1","-threads");
-        add_to_argv(argv,size,"0","-bf");
-        add_to_argv(argv,size,"0",gource->other.output_gorce);*/
-    }
-    argv[*size] = NULL;
-}
-
-void add_to_argv( char **argv, int *size, char *option, String *value ) {
-    if( option != NULL ) {
-        argv[*size] = option;
-        ( *size )++;
-    }
-    if( value != NULL ) {
-        argv[*size] = string_get_text( value );
-        ( *size )++;
-    }
-}
-
-void prepare_color( String *color ) { // Remove # from string
-    string_replace_first( color, "#", "" );
-}
-
-void prepare_screen_mode( String *screen_mode ) {
-    string_sprint( screen_mode, "-%s", string_get_text( screen_mode ) );
 }

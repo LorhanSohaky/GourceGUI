@@ -21,14 +21,16 @@ Criar uma interface gráfica para utilizar o [Gource](https://github.com/acaudwe
 - Não possui todas as opções disponíveis pelo próprio [Gource](https://github.com/acaudwell/Gource).
 - Testado apenas no Linux.
 
+### RECOMENDAÇÕES:
+Utilize o [Commit Message Into Subtitle](https://github.com/LorhanSohaky/CommitMessageIntoSubtitle/blob/master/README_pt-br.md)
+para gerar a legenda.
+
 ### DEPENDÊNCIAS:
  - GTK 3
  - Gource
 
 #### COMO COMPILAR:
-`$ cd src/`
-
 `$ make`
 
 #### COMO EXECUTAR:
-`$ ./gourceGui.exe`
+`$ bin/gourceGui.exe`

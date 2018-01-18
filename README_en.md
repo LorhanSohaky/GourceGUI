@@ -21,14 +21,16 @@ Create a graphical interface to use [Gource](https://github.com/acaudwell/Gource
 - You do not have all the options available by [Gource](https://github.com/acaudwell/Gource).
 - Tested only on Linux.
 
+### RECOMMEDATIONS
+Use the [Commit Message Into Subtitle](https://github.com/LorhanSohaky/CommitMessageIntoSubtitle/blob/master/README_en.md)
+to generate the caption.
+
 ### DEPENDENCIES:
  - GTK 3
  - Gource
 
 #### HOW TO COMPILE:
-`$ cd src/`
-
 `$ make`
 
 #### HOW TO RUN:
-`$ ./gourceGui.exe`
+`$ bin/gourceGui.exe`

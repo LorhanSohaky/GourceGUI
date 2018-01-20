@@ -42,9 +42,12 @@ void execute( GtkWidget *widget, gpointer data ) {
                                                                // is the NULL
                                                                // +25 to output gource option
     if( arguments_for_gource ) {
-        arguments_for_gource[number_of_arguments++] = "/usr/bin/gource";
+        arguments_for_gource[number_of_arguments++] =
+            string_get_text( gource->settings.gource_executable_path );
         add_gource_arguments( arguments_for_gource, gource, &number_of_arguments );
-        call_prog( "/usr/bin/gource", arguments_for_gource, number_of_arguments );
+        call_prog( string_get_text( gource->settings.gource_executable_path ),
+                   arguments_for_gource,
+                   number_of_arguments );
     }
 
     print_gource( gource );

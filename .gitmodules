@@ -1,0 +1,3 @@
+[submodule "utils/String"]
+	path = utils/String
+	url = git@github.com:LorhanSohaky/String.git

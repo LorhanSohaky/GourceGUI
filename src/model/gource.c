@@ -25,14 +25,17 @@ SOFTWARE.
 static void init_video_with_default_values( Video *video );
 static void init_caption_with_default_values( Caption *caption );
 static void init_other_with_default_values( Other *other );
+static void init_settings_with_default_values( Settings *settings );
 
 static int is_video_ok( Video *video );
 static int is_caption_ok( Caption *caption );
 static int is_other_ok( Other *other );
+static int is_settings_ok( Settings *settings );
 
 static void free_video( Video *video );
 static void free_caption( Caption *caption );
 static void free_other( Other *other );
+static void free_settings( Settings *settings );
 
 void init_string( String **destination, const char *initial_value );
 bool is_malloc_OK( Gource *gource );
@@ -41,6 +44,7 @@ void init_gource_with_default_values( Gource *gource ) {
     init_video_with_default_values( &gource->video );
     init_caption_with_default_values( &gource->caption );
     init_other_with_default_values( &gource->other );
+    init_settings_with_default_values( &gource->settings );
 }
 
 void init_video_with_default_values( Video *video ) {
@@ -66,9 +70,13 @@ void init_other_with_default_values( Other *other ) {
         string_new_with_text( DEFAULT_FOLDER_WITH_USERS_AVATAR_ICON );
 }
 
+void init_settings_with_default_values( Settings *settings ) {
+    settings->gource_executable_path = string_new_with_text( DEFAULT_GOURCE_EXECUTABLE_PATH );
+}
+
 int is_gource_ok( Gource *gource ) {
     return is_video_ok( &gource->video ) && is_caption_ok( &gource->caption ) &&
-        is_other_ok( &gource->other );
+        is_other_ok( &gource->other ) && is_settings_ok( &gource->settings );
 }
 
 static int is_video_ok( Video *video ) {
@@ -83,6 +91,10 @@ static int is_caption_ok( Caption *caption ) {
 static int is_other_ok( Other *other ) {
     return other->auto_skip_seconds && other->seconds_per_day && other->date_format &&
         other->folder_with_users_avatar_icon;
+}
+
+static int is_settings_ok( Settings *settings ) {
+    return settings->gource_executable_path != NULL;
 }
 
 void print_gource( Gource *gource ) {
@@ -105,12 +117,17 @@ void print_gource( Gource *gource ) {
     printf( "\tDate format - %s\n", string_get_text( gource->other.date_format ) );
     printf( "\tFolder with users avatar icon - %s\n",
             string_get_text( gource->other.folder_with_users_avatar_icon ) );
+
+    printf( "Settings:\n" );
+    printf( "\tGource executable path - %s\n",
+            string_get_text( gource->settings.gource_executable_path ) );
 }
 
 void free_gource( Gource *gource ) {
     free_video( &gource->video );
     free_caption( &gource->caption );
     free_other( &gource->other );
+    free_settings( &gource->settings );
 }
 
 static void free_video( Video *video ) {
@@ -168,5 +185,11 @@ static void free_other( Other *other ) {
 
     if( other->folder_with_users_avatar_icon ) {
         string_free( other->folder_with_users_avatar_icon );
+    }
+}
+
+static void free_settings( Settings *settings ) {
+    if( settings->gource_executable_path ) {
+        string_free( settings->gource_executable_path );
     }
 }

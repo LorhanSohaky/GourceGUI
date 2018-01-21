@@ -45,6 +45,9 @@ SOFTWARE.
 #define DEFAULT_DATE_FORMAT "%d/%m/%y  %H:%M:%S"
 #define DEFAULT_FOLDER_WITH_USERS_AVATAR_ICON ""
 
+// DEFAULT VALUES FOR SETTINGS
+#define DEFAULT_GOURCE_EXECUTABLE_PATH "/usr/bin/gource"
+
 #define NUMBER_OF_FIELDS 14
 
 typedef struct {
@@ -70,9 +73,14 @@ typedef struct {
 } Other;
 
 typedef struct {
+    String *gource_executable_path;
+} Settings;
+
+typedef struct {
     Video video;
     Caption caption;
     Other other;
+    Settings settings;
 } Gource;
 
 void init_gource_with_default_values( Gource *gource );

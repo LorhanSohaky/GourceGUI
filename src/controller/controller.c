@@ -24,6 +24,9 @@
 #include "process_creator.h"
 #include "utils.h"
 #include <stdio.h>
+#include <string.h>
+
+void set_gource_executable_path( int argc, char *argv[], Settings *settings );
 
 int controller( int argc, char *argv[] ) {
     Gource gource_settings;
@@ -31,9 +34,11 @@ int controller( int argc, char *argv[] ) {
     int status = 0;
 
     if( is_gource_ok( &gource_settings ) ) {
+        set_gource_executable_path( argc, argv, &gource_settings.settings );
+
         GtkApplication *app = gtk_application_new( "org.gourcegui", G_APPLICATION_FLAGS_NONE );
         g_signal_connect( app, "activate", G_CALLBACK( activate ), &gource_settings );
-        status = g_application_run( G_APPLICATION( app ), argc, argv );
+        status = g_application_run( G_APPLICATION( app ), 0, NULL );
         g_object_unref( app );
         free_gource( &gource_settings );
     } else {
@@ -41,4 +46,13 @@ int controller( int argc, char *argv[] ) {
         free_gource( &gource_settings );
     }
     return status;
+}
+
+void set_gource_executable_path( int argc, char *argv[], Settings *settings ) {
+    for( int i = 1; i < argc; i++ ) {
+        if( !strcmp( "--gource-path", argv[i] ) && i + 1 < argc ) {
+            string_set_text( settings->gource_executable_path, argv[i + 1] );
+            return;
+        }
+    }
 }

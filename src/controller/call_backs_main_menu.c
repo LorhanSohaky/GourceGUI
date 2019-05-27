@@ -33,126 +33,154 @@ static void add_caption_arguments( char *arguments[], Caption *caption, unsigned
 static void add_other_arguments( char *arguments[], Other *other, unsigned int *count );
 
 void execute( GtkWidget *widget, gpointer data ) {
-    Gource *gource = (Gource *)data;
-    unsigned int number_of_arguments = 0;
+	Gource *gource					 = (Gource *)data;
+	unsigned int number_of_arguments = 0;
+	char *arguments_for_ffmpeg[50]   = {"ffmpeg",
+										"-y",
+										"-r",
+										"60",
+										"-f",
+										"image2pipe",
+										"-vcodec",
+										"ppm",
+										"-i",
+										"-",
+										"-vcodec",
+										"libx264",
+										"-preset",
+										"fast",
+										"-pix_fmt",
+										"yuv420p",
+										"-crf",
+										"1",
+										"-threads",
+										"0",
+										"-bf",
+										"0",
+										"/home/lorhan/video1.mp4"};
 
-    char **arguments_for_gource = calloc( NUMBER_OF_FIELDS * 2 + 2 + 25,
-                                          sizeof( char ** ) ); // +2 because the first argument is
-                                                               // the program itself and the last
-                                                               // is the NULL
-                                                               // +25 to output gource option
-    if( arguments_for_gource ) {
-        arguments_for_gource[number_of_arguments++] =
-            string_get_text( gource->settings.gource_executable_path );
-        add_gource_arguments( arguments_for_gource, gource, &number_of_arguments );
-        call_prog( string_get_text( gource->settings.gource_executable_path ),
-                   arguments_for_gource,
-                   number_of_arguments );
-    }
+	char **arguments_for_gource = calloc( NUMBER_OF_FIELDS * 2 + 2 + 33,
+										  sizeof( char ** ) ); // +2 because the first argument is
+															   // the program itself and the last
+															   // is the NULL
+															   // +33 to output gource option
+	if( arguments_for_gource ) {
+		arguments_for_gource[number_of_arguments++] =
+			string_get_text( gource->settings.gource_executable_path );
+		add_gource_arguments( arguments_for_gource, gource, &number_of_arguments );
+		call_progs( arguments_for_gource, arguments_for_ffmpeg );
+	}
 
-    print_gource( gource );
+	print_gource( gource );
 }
 
 static void add_gource_arguments( char *arguments[], Gource *gource, unsigned int *count ) {
-    add_video_arguments( arguments, &gource->video, count );
-    add_caption_arguments( arguments, &gource->caption, count );
-    add_other_arguments( arguments, &gource->other, count );
+	arguments[( *count )++] = "/usr/bin/gource";
+	add_video_arguments( arguments, &gource->video, count );
+	add_caption_arguments( arguments, &gource->caption, count );
+	add_other_arguments( arguments, &gource->other, count );
 
-    arguments[( *count )] = NULL;
+	arguments[( *count )++] = "-r";
+	arguments[( *count )++] = "30";
+	arguments[( *count )++] = "-o";
+	arguments[( *count )++] = "-";
+
+	arguments[( *count )] = NULL;
 }
 
 static void add_video_arguments( char *arguments[], Video *video, unsigned int *count ) {
-    if( !string_is_empty( video->repository ) ) {
-        arguments[( *count )++] = string_get_text( video->repository );
-    }
+	arguments[( *count )++] = "--stop-at-end";
+	if( !string_is_empty( video->repository ) ) {
+		arguments[( *count )++] = string_get_text( video->repository );
+	}
 
-    if( !string_is_empty( video->title ) ) {
-        arguments[( *count )++] = "--title";
+	if( !string_is_empty( video->title ) ) {
+		arguments[( *count )++] = "--title";
 
-        arguments[( *count )++] = string_get_text( video->title );
-    }
+		arguments[( *count )++] = string_get_text( video->title );
+	}
 
-    if( !string_is_empty( video->screen_mode ) ) {
-        if( !strcmp( "Fullscreen", string_get_text( video->screen_mode ) ) ) {
-            arguments[( *count )++] = "-f";
-        } else if( !strcmp( "Windowed", string_get_text( video->screen_mode ) ) ) {
-            arguments[( *count )++] = "-w";
-        } else {
-            String *tmp = string_new_with_text( string_get_text( video->screen_mode ) );
-            string_sprint( video->screen_mode, "-%s", string_get_text( tmp ) );
-            string_free( tmp );
+	if( !string_is_empty( video->screen_mode ) ) {
+		if( !strcmp( "Fullscreen", string_get_text( video->screen_mode ) ) ) {
+			arguments[( *count )++] = "-f";
+		} else if( !strcmp( "Windowed", string_get_text( video->screen_mode ) ) ) {
+			arguments[( *count )++] = "-w";
+		} else {
+			String *tmp = string_new_with_text( string_get_text( video->screen_mode ) );
+			string_sprint( video->screen_mode, "-%s", string_get_text( tmp ) );
+			string_free( tmp );
 
-            arguments[( *count )++] = string_get_text( video->screen_mode );
-        }
-    }
+			arguments[( *count )++] = string_get_text( video->screen_mode );
+		}
+	}
 
-    if( !string_is_empty( video->background_color ) ) {
-        arguments[( *count )++] = "-b";
+	if( !string_is_empty( video->background_color ) ) {
+		arguments[( *count )++] = "-b";
 
-        string_replace_first( video->background_color, "#", "" );
-        arguments[( *count )++] = string_get_text( video->background_color );
-    }
+		string_replace_first( video->background_color, "#", "" );
+		arguments[( *count )++] = string_get_text( video->background_color );
+	}
 
-    if( !string_is_empty( video->camera_mode ) ) {
-        arguments[( *count )++] = "--camera-mode";
+	if( !string_is_empty( video->camera_mode ) ) {
+		arguments[( *count )++] = "--camera-mode";
 
-        string_tolower( string_get_text( video->camera_mode ) );
-        arguments[( *count )++] = string_get_text( video->camera_mode );
-    }
+		string_tolower( string_get_text( video->camera_mode ) );
+		arguments[( *count )++] = string_get_text( video->camera_mode );
+	}
 }
 
 static void add_caption_arguments( char *arguments[], Caption *caption, unsigned int *count ) {
-    if( !string_is_empty( caption->file ) ) {
-        arguments[( *count )++] = "--caption-file";
+	if( !string_is_empty( caption->file ) ) {
+		arguments[( *count )++] = "--caption-file";
 
-        arguments[( *count )++] = string_get_text( caption->file );
-    }
+		arguments[( *count )++] = string_get_text( caption->file );
+	}
 
-    if( !string_is_empty( caption->font_size ) ||
-        strcmp( string_get_text( caption->font_size ), "0" ) ) {
-        arguments[( *count )++] = "--caption-size";
+	if( !string_is_empty( caption->font_size ) ||
+		strcmp( string_get_text( caption->font_size ), "0" ) ) {
+		arguments[( *count )++] = "--caption-size";
 
-        arguments[( *count )++] = string_get_text( caption->font_size );
-    }
+		arguments[( *count )++] = string_get_text( caption->font_size );
+	}
 
-    if( !string_is_empty( caption->duration ) ||
-        strcmp( string_get_text( caption->duration ), "0" ) ) {
-        arguments[( *count )++] = "--caption-duration";
-        arguments[( *count )++] = string_get_text( caption->duration );
-    }
+	if( !string_is_empty( caption->duration ) ||
+		strcmp( string_get_text( caption->duration ), "0" ) ) {
+		arguments[( *count )++] = "--caption-duration";
+		arguments[( *count )++] = string_get_text( caption->duration );
+	}
 
-    if( !string_is_empty( caption->color ) ) {
-        arguments[( *count )++] = "--caption-colour";
+	if( !string_is_empty( caption->color ) ) {
+		arguments[( *count )++] = "--caption-colour";
 
-        string_replace_first( caption->color, "#", "" );
-        arguments[( *count )++] = string_get_text( caption->color );
-    }
+		string_replace_first( caption->color, "#", "" );
+		arguments[( *count )++] = string_get_text( caption->color );
+	}
 }
 
 static void add_other_arguments( char *arguments[], Other *other, unsigned int *count ) {
-    if( !string_is_empty( other->auto_skip_seconds ) ||
-        strcmp( string_get_text( other->auto_skip_seconds ), "0" ) ) {
-        arguments[( *count )++] = "--auto-skip-seconds";
+	if( !string_is_empty( other->auto_skip_seconds ) ||
+		strcmp( string_get_text( other->auto_skip_seconds ), "0" ) ) {
+		arguments[( *count )++] = "--auto-skip-seconds";
 
-        arguments[( *count )++] = string_get_text( other->auto_skip_seconds );
-    }
+		arguments[( *count )++] = string_get_text( other->auto_skip_seconds );
+	}
 
-    if( !string_is_empty( other->seconds_per_day ) ||
-        strcmp( string_get_text( other->seconds_per_day ), "0" ) ) {
-        arguments[( *count )++] = "--seconds-per-day";
+	if( !string_is_empty( other->seconds_per_day ) ||
+		strcmp( string_get_text( other->seconds_per_day ), "0" ) ) {
+		arguments[( *count )++] = "--seconds-per-day";
 
-        arguments[( *count )++] = string_get_text( other->seconds_per_day );
-    }
+		arguments[( *count )++] = string_get_text( other->seconds_per_day );
+	}
 
-    if( !string_is_empty( other->date_format ) ) {
-        arguments[( *count )++] = "--date-format";
+	if( !string_is_empty( other->date_format ) ) {
+		arguments[( *count )++] = "--date-format";
 
-        arguments[( *count )++] = string_get_text( other->date_format );
-    }
+		arguments[( *count )++] = string_get_text( other->date_format );
+	}
 
-    if( !string_is_empty( other->folder_with_users_avatar_icon ) ) {
-        arguments[( *count )++] = "--user-image-dir";
+	if( !string_is_empty( other->folder_with_users_avatar_icon ) ) {
+		arguments[( *count )++] = "--user-image-dir";
 
-        arguments[( *count )++] = string_get_text( other->folder_with_users_avatar_icon );
-    }
+		arguments[( *count )++] = string_get_text( other->folder_with_users_avatar_icon );
+	}
 }

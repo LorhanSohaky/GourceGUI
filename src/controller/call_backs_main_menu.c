@@ -58,6 +58,7 @@ void execute( GtkWidget *widget, gpointer data ) {
 										"-bf",
 										"0",
 										"/home/lorhan/video1.mp4"};
+	// TODO Add window to select where save the video
 
 	char **arguments_for_gource = calloc( NUMBER_OF_FIELDS * 2 + 2 + 33,
 										  sizeof( char ** ) ); // +2 because the first argument is

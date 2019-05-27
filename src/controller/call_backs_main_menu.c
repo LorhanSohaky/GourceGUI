@@ -26,6 +26,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+void call_processes( Gource *gource, char *filename );
+
 static void add_gource_arguments( char *arguments[], Gource *gource, unsigned int *count );
 
 static void add_video_arguments( char *arguments[], Video *video, unsigned int *count );
@@ -33,31 +35,37 @@ static void add_caption_arguments( char *arguments[], Caption *caption, unsigned
 static void add_other_arguments( char *arguments[], Other *other, unsigned int *count );
 
 void execute( GtkWidget *widget, gpointer data ) {
-	Gource *gource					 = (Gource *)data;
+	Gource *gource	= (Gource *)data;
+	GtkWindow *window = (GtkWindow *)widget;
+
+	GtkFileChooserNative *native;
+	GtkFileChooser *chooser;
+	GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
+	char *filename;
+	gint res;
+
+	native  = gtk_file_chooser_native_new( "Save File", window, action, "_Save", "_Cancel" );
+	chooser = GTK_FILE_CHOOSER( native );
+
+	gtk_file_chooser_set_do_overwrite_confirmation( chooser, TRUE );
+
+	gtk_file_chooser_set_current_name( chooser, "Untitled document" );
+
+	res = gtk_native_dialog_run( GTK_NATIVE_DIALOG( native ) );
+	if( res == GTK_RESPONSE_ACCEPT ) {
+		filename = gtk_file_chooser_get_filename( chooser );
+	}
+
+	g_object_unref( native );
+	call_processes( gource, filename );
+}
+
+void call_processes( Gource *gource, char *filename ) {
 	unsigned int number_of_arguments = 0;
-	char *arguments_for_ffmpeg[50]   = {"ffmpeg",
-										"-y",
-										"-r",
-										"60",
-										"-f",
-										"image2pipe",
-										"-vcodec",
-										"ppm",
-										"-i",
-										"-",
-										"-vcodec",
-										"libx264",
-										"-preset",
-										"fast",
-										"-pix_fmt",
-										"yuv420p",
-										"-crf",
-										"1",
-										"-threads",
-										"0",
-										"-bf",
-										"0",
-										"/home/lorhan/video1.mp4"};
+	char *arguments_for_ffmpeg[100]  = {
+		 "ffmpeg", "-y", "-r",		 "60",		"-f",	  "image2pipe", "-vcodec",  "ppm",
+		 "-i",	 "-",  "-vcodec",  "libx264", "-preset", "fast",		 "-pix_fmt", "yuv420p",
+		 "-crf",   "1",  "-threads", "0",		"-bf",	 "0",			 filename};
 	// TODO Add window to select where save the video
 
 	char **arguments_for_gource = calloc( NUMBER_OF_FIELDS * 2 + 2 + 33,
@@ -73,6 +81,7 @@ void execute( GtkWidget *widget, gpointer data ) {
 	}
 
 	print_gource( gource );
+	g_free( filename );
 }
 
 static void add_gource_arguments( char *arguments[], Gource *gource, unsigned int *count ) {

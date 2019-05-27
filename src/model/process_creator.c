@@ -27,35 +27,35 @@ SOFTWARE.
 
 #include <windows.h>
 int call_prog( char *prog, char *argv[], int argc ) {
-    printf( "windows\n" );
-    PROCESS_INFORMATION ProcessInfo; // This is what we get as an [out] parameter
-    STARTUPINFO StartupInfo;         // This is an [in] parameter
-    ZeroMemory( &StartupInfo, sizeof( StartupInfo ) );
-    StartupInfo.cb = sizeof StartupInfo; // Only compulsory field
-    DWORD exit_code;
-    _string str;
-    str.value = (char *)malloc( 100 * sizeof( char ) );
-    str.size = 100;
-    if( str == NULL ) {
-        return -1;
-    }
-    copy_string( str, prog );
-    for( int i = 0; i < argc; i++ ) {
-        append_string( str, " " );
-        append_string( str, argv[i] );
-    }
-    printf( "%s\n", str );
-    printf( "%s\n", prog );
-    if( CreateProcess( prog, str, NULL, NULL, FALSE, 0, NULL, NULL, &StartupInfo, &ProcessInfo ) ) {
-        WaitForSingleObject( ProcessInfo.hProcess, INFINITE );
-        GetExitCodeProcess( ProcessInfo.hProcess, &exit_code );
-        printf( "returns: %d\n", exit_code );
-        CloseHandle( ProcessInfo.hThread );
-        CloseHandle( ProcessInfo.hProcess );
-    } else {
-        printf( "The process could not be started..." );
-    }
-    return exit_code;
+	printf( "windows\n" );
+	PROCESS_INFORMATION ProcessInfo; // This is what we get as an [out] parameter
+	STARTUPINFO StartupInfo;		 // This is an [in] parameter
+	ZeroMemory( &StartupInfo, sizeof( StartupInfo ) );
+	StartupInfo.cb = sizeof StartupInfo; // Only compulsory field
+	DWORD exit_code;
+	_string str;
+	str.value = (char *)malloc( 100 * sizeof( char ) );
+	str.size  = 100;
+	if( str == NULL ) {
+		return -1;
+	}
+	copy_string( str, prog );
+	for( int i = 0; i < argc; i++ ) {
+		append_string( str, " " );
+		append_string( str, argv[i] );
+	}
+	printf( "%s\n", str );
+	printf( "%s\n", prog );
+	if( CreateProcess( prog, str, NULL, NULL, FALSE, 0, NULL, NULL, &StartupInfo, &ProcessInfo ) ) {
+		WaitForSingleObject( ProcessInfo.hProcess, INFINITE );
+		GetExitCodeProcess( ProcessInfo.hProcess, &exit_code );
+		printf( "returns: %d\n", exit_code );
+		CloseHandle( ProcessInfo.hThread );
+		CloseHandle( ProcessInfo.hProcess );
+	} else {
+		printf( "The process could not be started..." );
+	}
+	return exit_code;
 }
 #elif __linux__
 // define it for a Linux machine
@@ -63,19 +63,51 @@ int call_prog( char *prog, char *argv[], int argc ) {
 #include <sys/wait.h>
 #include <unistd.h>
 
-int call_prog( char *prog, char *argv[], int argc ) {
-    pid_t pid;
-    int status;
-    printf( "\n%s\n", prog );
-    pid = fork();
+int call_progs( char *gource_args[], char *ffmpeg_args[] ) {
+	pid_t gource, ffmpeg;
 
-    if( pid == 0 ) { // child process
-        execv( prog, argv );
-    }
-    waitpid( pid, &status, 0 );
-    int es = WEXITSTATUS( status );
-    printf( "Exit status was %d\n", es );
-    return es;
+	int pipefd_between_processes[2], pipefd_between_ffmpeg_and_parent[2];
+
+	if( pipe( pipefd_between_processes ) < 0 ) {
+		printf( "Erro pipe A\n" );
+	}
+
+	if( pipe( pipefd_between_ffmpeg_and_parent ) < 0 ) {
+		printf( "Erro pipe B\n" );
+	}
+
+	gource = fork();
+	if( gource == 0 ) {
+		close( pipefd_between_processes[0] );
+		close( pipefd_between_ffmpeg_and_parent[1] );
+		close( pipefd_between_ffmpeg_and_parent[0] );
+
+		dup2( pipefd_between_processes[1], 1 );
+
+		execvp( "gource", gource_args );
+	} else {
+		ffmpeg = fork();
+
+		if( ffmpeg == 0 ) {
+			close( pipefd_between_processes[1] );
+			close( pipefd_between_ffmpeg_and_parent[0] );
+
+			dup2( pipefd_between_processes[0], 0 );
+			dup2( 1, pipefd_between_ffmpeg_and_parent[1] );
+			execvp( "ffmpeg", ffmpeg_args );
+
+		} else {
+			close( pipefd_between_processes[0] );
+			close( pipefd_between_processes[1] );
+			close( pipefd_between_ffmpeg_and_parent[1] );
+
+			dup2( pipefd_between_ffmpeg_and_parent[0], 1 );
+
+			waitpid( gource, NULL, 0 );
+			waitpid( ffmpeg, NULL, 0 );
+		}
+	}
+	return 0;
 }
 
 #endif
